@@ -14,12 +14,44 @@ def pv_format_check(word: str) -> bool:
         return False
 
 
+def get_device_name(pv: str) -> str:
+    """Get the device name, allowing for cases where the pv is incorrect because of a missing colon"""
+
+    # Default assignment
+    device = pv
+
+    if ":" in pv:
+        device = pv.split(":")[0]
+
+    if len(re.split("[-_]", device)) >= 4:
+        elements = re.split("[-_]", device)
+        # Just the identifier
+        initial_element = elements[3]
+        shortened_element = elements[3][:2]
+        potential_device = re.sub(
+            f"(?<=[-_]){initial_element}(.*)", shortened_element, device
+        )
+        if pv_format_check(potential_device):
+            device = potential_device
+
+    return device
+
+
 def pv_format_report(pv: str) -> List[str]:
     """Produce a dictionary detailing errors with the pv format"""
     errors = []
 
     # Get the device name
-    device = pv.split(":")[0]
+    if (
+        len(re.split("[-_]", pv)) > 4
+        and ":" not in pv
+        and len(re.split("[-_]", pv)[3]) > 2
+    ):
+        errors.append("Missing a colon after the device name")
+        device = get_device_name(pv)
+    else:
+        device = pv.split(":")[0]
+
     logging.debug(f"Device: {device}")
 
     # Check uppercase
@@ -76,9 +108,12 @@ def pv_format_report(pv: str) -> List[str]:
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
 
+    get_device_name("BL18I-EA-IOC_03B")
+
     print(pv_format_check("BL16I-Ea_IO01-:MOTOR:Y"))
     pv_format_report("BL16I-Ea_IO01-:MOTOR:Y")
     print(pv_format_check("B1I6I-EAA-IOCSADSSD-O1:MOTOR:Y"))
     pv_format_report("B1I6I-EAA-IOCSADSSD-O1:MOTOR:Y")
     print(pv_format_check("BL16I-EA-IOC-01"))
     pv_format_report("BL16I-EA-IOC-01")
+    pv_format_report("BL02I-EA-IOC-04SR_0_Time")

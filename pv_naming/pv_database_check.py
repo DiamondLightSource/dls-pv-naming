@@ -109,8 +109,12 @@ def pv_database_report(pv: str, database_info: dict = empty_database) -> List[st
         logging.debug(f"Subdomain: {subdomain}")
         if subdomain not in database_info["subdomain"]:
             errors.append(f"Subdomain of {subdomain} not found in database")
-        if subdomain not in database_info["domain_pair"][domain]:
-            errors.append(f"Pair of {domain} and {subdomain} nto found in database")
+        if domain not in database_info["domain_pair"]:
+            errors.append(
+                f"Domain of {domain} does not have any subdomains recorded in database"
+            )
+        elif subdomain not in database_info["domain_pair"][domain]:
+            errors.append(f"Pair of {domain} and {subdomain} not found in database")
 
     # Check technical area found in database
     logging.debug(f"Tech Area: {technical_area}")
@@ -141,3 +145,4 @@ if __name__ == "__main__":
     print(pv_database_check("BL16I-EA-IOC-02:MOTOR:TIM", database_info=database_info))
     print(pv_database_check("ME16I-EA-IOC-02:MOTOR:TIM", database_info=database_info))
     print(pv_database_report("ME16I-EA-IOC-02:MOTOR:TIM", database_info=database_info))
+    print(pv_database_report("LI16I-EA-IOC-02:MOTOR:TIM", database_info=database_info))

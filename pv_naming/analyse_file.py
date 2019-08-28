@@ -4,7 +4,7 @@ from typing import List
 
 from fetch_info import fetch_information
 from pv_database_check import pv_database_check, pv_database_report, empty_database
-from pv_format_check import pv_format_check, pv_format_report
+from pv_format_check import get_device_name, pv_format_check, pv_format_report
 
 record_regex = '(?<=^record)(?:.*)(?<=")(.*)"'
 
@@ -42,7 +42,7 @@ def record_text_report(record_text: str, database_info: dict = empty_database) -
     # Collect a dictionary of device occurrences which splits on a colon to separate device names
     device_occurences = {}
     for pv in unique_record_pvs:
-        device_name = pv.split(":")[0]
+        device_name = get_device_name(pv)
         if device_name not in device_occurences:
             device_occurences[device_name] = [pv]
         else:
@@ -50,14 +50,14 @@ def record_text_report(record_text: str, database_info: dict = empty_database) -
     logging.debug(f"Found {len(device_occurences)} device names")
 
     # Check basic pv formatting
-    good_format_device_names = [d for d in device_occurences if pv_format_check(d)]
-    bad_format_device_names = [d for d in device_occurences if not pv_format_check(d)]
+    good_format_device_names = [d for d in unique_record_pvs if pv_format_check(d)]
+    bad_format_device_names = [d for d in unique_record_pvs if not pv_format_check(d)]
 
     # Produce report for PVs which failed basic formatting tests
     format_report = {
-        device: {
+        get_device_name(device): {
             "errors": pv_format_report(device),
-            "occurences": device_occurences[device],
+            "occurences": device_occurences[get_device_name(device)],
         }
         for device in bad_format_device_names
     }
@@ -69,9 +69,9 @@ def record_text_report(record_text: str, database_info: dict = empty_database) -
 
     # Produce report for PVs which failed database check
     database_report = {
-        device: {
+        get_device_name(device): {
             "errors": pv_database_report(device, database_info),
-            "occurences": device_occurences[device],
+            "occurences": device_occurences[get_device_name(device)],
         }
         for device in bad_database_device_names
     }
@@ -102,11 +102,12 @@ def record_file_report(filename: str, database_info: dict) -> dict:
 def record_file_report_many(filename_list: List[str], database_info: dict) -> dict:
     """Produce a report for each of the files requested"""
     initial_reports = {
-        filename: record_file_report(filename) for filename in filename_list
+        filename: record_file_report(filename, database_info)
+        for filename in filename_list
     }
 
     # Only return names of files which returned a report
-    return {filename: report for filename, report in initial_reports if report}
+    return {filename: report for filename, report in initial_reports.items() if report}
 
 
 if __name__ == "__main__":
@@ -114,8 +115,12 @@ if __name__ == "__main__":
     database_info = fetch_information()
 
     record_text_report(
-        '''record(ai, "BL6I-EA-IOC-01")
-    record(ai, "ME16I-EA-IOC-01"''',
+        """record(ai, "BL6I-EA-IOC-01")
+record(ai, "ME16I-EA-IOC-01"
+record(ai, "BL02I-EA-IOC-04SR_5_Status")
+record(ai, "BL02I-EA-IOC-04SR_deadIfZero")
+record(ai, "BL14I-VA-VLVCC-03B")
+record(ai, "BL14I-VA-VLVCC-03B:Some:Other:Things")""",
         database_info,
     )
 
@@ -125,3 +130,21 @@ if __name__ == "__main__":
             database_info,
         )
     )
+
+    print(
+        record_file_report(
+            "/dls_sw/prod/R3.14.12.3/ioc/BL14I/BL14I-VA-IOC-03/2-0/db/BL14I-VA-IOC-03_expanded.db",
+            database_info,
+        )
+    )
+
+    # print(
+    #     record_file_report_many(
+    #         [
+    #             "/dls_sw/prod/R3.14.12.7/ioc/BL18B/BL18B-EA-IOC-14/2-0/db/BL18B-EA-IOC-14_expanded.db",
+    #             "/dls_sw/prod/R3.14.12.7/ioc/BL18B/BL18B-EA-IOC-14/2-0/db/BL18B-EA-IOC-14_expanded.db",
+    #             "/dls_sw/prod/R3.14.12.7/ioc/BL18B/BL18B-EA-IOC-14/2-0/db/BL18B-EA-IOC-14_expanded.db",
+    #         ],
+    #         database_info,
+    #     )
+    # )
