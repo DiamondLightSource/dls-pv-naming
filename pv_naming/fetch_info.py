@@ -66,6 +66,42 @@ def fetch_pairs(request_address: str, key: str, value: str) -> dict:
         return False
 
 
+def fetch_information() -> dict:
+    """Collect all useful information from the database"""
+    return {
+        "domain": fetch_from_rdb(
+            "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetdomain.php",
+            "domainid",
+            "domainname",
+        ),
+        "subdomain": fetch_from_rdb(
+            "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetsubdomain.php",
+            "subdomainid",
+            "subdomainname",
+        ),
+        "domain_pair": fetch_pairs(
+            "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetsubdomain.php",
+            "domainid",
+            "subdomainid",
+        ),
+        "subdomain_pair": fetch_pairs(
+            "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetsubdomain.php",
+            "subdomainid",
+            "domainid",
+        ),
+        "technical_area": fetch_from_rdb(
+            "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigettecharea.php",
+            "techareaid",
+            "techareaname",
+        ),
+        "component": fetch_all_from_rdb(
+            "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetcomponent.php",
+            "componentid",
+            "componentname",
+        ),
+    }
+
+
 t = time.time()
 domains = fetch_from_rdb(
     "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetdomain.php",
