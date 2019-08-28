@@ -1,5 +1,6 @@
 import logging
 import re
+from typing import List
 
 
 def pv_format_check(word: str) -> bool:
@@ -13,7 +14,7 @@ def pv_format_check(word: str) -> bool:
         return False
 
 
-def pv_format_report(pv: str) -> list:
+def pv_format_report(pv: str) -> List[str]:
     """Produce a dictionary detailing errors with the pv format"""
     errors = []
 
