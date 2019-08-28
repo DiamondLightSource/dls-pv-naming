@@ -1,0 +1,114 @@
+import logging
+import re
+from typing import List
+
+from fetch_info import fetch_information
+from pv_database_check import pv_database_check, pv_database_report, empty_database
+from pv_format_check import pv_format_check, pv_format_report
+
+record_regex = '(?<=^record)(?:.*)(?<=")(.*)"'
+
+
+def record_file_report(record_text: str, database_info: dict = empty_database) -> dict:
+    """
+    Analyse a .db records file to find the records, extract a list of unique device names and then
+    check them against the specified Diamond format and the database to produce a useful report.
+
+    Ouptut expected to look like this for an example *bad_device_name*:
+
+    {
+        bad_device_name: {
+            occurences: [
+                list of subdevice names found with this device name
+            ],
+            errors: [
+                list of errors associated with the bad device name
+            ],
+            suggestions: [
+                lsit of spelling suggestions for device name
+            ]
+        }
+    }
+
+    :param record_text: String of file to analyse (will be analysed directly, not read from this address)
+    :param database_info: Dictionary containing database information to use when analysing
+    """
+    record_pvs = get_record_pvs(record_text)
+    logging.debug(f"Found {len(record_pvs)} pvs")
+
+    unique_record_pvs = set(record_pvs)
+    logging.debug(f"Found {len(unique_record_pvs)} unique pvs")
+
+    # Collect a dictionary of device occurrences which splits on a colon to separate device names
+    device_occurences = {}
+    for pv in unique_record_pvs:
+        device_name = pv.split(":")[0]
+        if device_name not in device_occurences:
+            device_occurences[device_name] = [pv]
+        else:
+            device_occurences[device_name].append(pv)
+    logging.debug(f"Found {len(device_occurences)} device names")
+
+    # Check basic pv formatting
+    good_format_device_names = [d for d in device_occurences if pv_format_check(d)]
+    bad_format_device_names = [d for d in device_occurences if not pv_format_check(d)]
+
+    # Produce report for PVs which failed basic formatting tests
+    format_report = {
+        device: {
+            "errors": pv_format_report(device),
+            "occurences": device_occurences[device],
+        }
+        for device in bad_format_device_names
+    }
+
+    # Find PVs which passed the formatting tests but cannot be located in the database
+    bad_database_device_names = [
+        d for d in good_format_device_names if not pv_database_check(d, database_info)
+    ]
+
+    # Produce report for PVs which failed database check
+    database_report = {
+        device: {
+            "errors": pv_database_report(device, database_info),
+            "occurences": device_occurences[device],
+        }
+        for device in bad_database_device_names
+    }
+
+    output_report = {}
+
+    if format_report:
+        output_report.update({"Format errors": format_report})
+    if database_report:
+        output_report.update({"Database errors": database_report})
+
+    return output_report
+
+
+def get_record_pvs(record_text: str) -> List[str]:
+    """Read record_file and return a list of all PVS which match a more general PV format"""
+    return [pv for pv in re.findall(record_regex, record_text, flags=re.MULTILINE)]
+
+
+def connection_record_file_report(filename: str) -> dict:
+    """Read the contents of the file, fetch the information from the database and return a report"""
+    with open(filename, "r") as fp:
+        file_text = fp.read()
+
+    database_info = fetch_information()
+
+    return record_file_report(file_text, database_info)
+
+
+record_file_report(
+    '''record(ai, "BL6I-EA-IOC-01")
+record(ai, "ME16I-EA-IOC-01"''',
+    fetch_information(),
+)
+
+print(
+    connection_record_file_report(
+        "/dls_sw/prod/R3.14.12.7/ioc/BL18B/BL18B-EA-IOC-14/2-0/db/BL18B-EA-IOC-14_expanded.db"
+    )
+)
