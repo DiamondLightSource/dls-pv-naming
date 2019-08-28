@@ -102,44 +102,45 @@ def fetch_information() -> dict:
     }
 
 
-t = time.time()
-domains = fetch_from_rdb(
-    "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetdomain.php",
-    "domainid",
-    "domainname",
-)
+if __name__ == "__main__":
+    t = time.time()
+    domains = fetch_from_rdb(
+        "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetdomain.php",
+        "domainid",
+        "domainname",
+    )
 
-subdomains = fetch_from_rdb(
-    "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetsubdomain.php",
-    "subdomainid",
-    "subdomainname",
-)
+    subdomains = fetch_from_rdb(
+        "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetsubdomain.php",
+        "subdomainid",
+        "subdomainname",
+    )
 
-domain_pairs = fetch_pairs(
-    "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetsubdomain.php",
-    "domainid",
-    "subdomainid",
-)
+    domain_pairs = fetch_pairs(
+        "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetsubdomain.php",
+        "domainid",
+        "subdomainid",
+    )
 
-subdomain_pairs = fetch_pairs(
-    "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetsubdomain.php",
-    "subdomainid",
-    "domainid",
-)
+    subdomain_pairs = fetch_pairs(
+        "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetsubdomain.php",
+        "subdomainid",
+        "domainid",
+    )
 
-techareas = fetch_from_rdb(
-    "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigettecharea.php",
-    "techareaid",
-    "techareaname",
-)
+    techareas = fetch_from_rdb(
+        "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigettecharea.php",
+        "techareaid",
+        "techareaname",
+    )
 
-comps = fetch_all_from_rdb(
-    "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetcomponent.php",
-    "componentid",
-    "componentname",
-)
-print(f"Took {time.time() - t}")
+    comps = fetch_all_from_rdb(
+        "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetcomponent.php",
+        "componentid",
+        "componentname",
+    )
+    print(f"Took {time.time() - t}")
 
-print(len(domains))
-print(len(techareas))
-print(len(comps))
+    print(len(domains))
+    print(len(techareas))
+    print(len(comps))
