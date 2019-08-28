@@ -104,9 +104,8 @@ def pv_database_report(pv: str, database_info: dict = empty_database) -> List[st
     logging.debug(f"Domain: {domain}")
     if domain[:2] not in database_info["domain"]:
         errors.append(f"Domain of {domain} not found in database")
-
     # Check subdomain exists and is paired with the correct domain
-    if subdomain:
+    elif subdomain:
         logging.debug(f"Subdomain: {subdomain}")
         if subdomain not in database_info["subdomain"]:
             errors.append(f"Subdomain of {subdomain} not found in database")
@@ -130,8 +129,7 @@ def pv_database_report(pv: str, database_info: dict = empty_database) -> List[st
         if "O" in identifier:
             errors.append("Found capital letter O in identifier, expected number zero")
 
-    # If all of these tests passed, return True
-    return True
+    return errors
 
 
 if __name__ == "__main__":
@@ -142,3 +140,4 @@ if __name__ == "__main__":
     print(pv_database_check("BL16I-EA-IOC-02:MOTOR:TIM"))
     print(pv_database_check("BL16I-EA-IOC-02:MOTOR:TIM", database_info=database_info))
     print(pv_database_check("ME16I-EA-IOC-02:MOTOR:TIM", database_info=database_info))
+    print(pv_database_report("ME16I-EA-IOC-02:MOTOR:TIM", database_info=database_info))
