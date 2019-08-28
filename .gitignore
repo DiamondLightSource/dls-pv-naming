@@ -63,6 +63,9 @@ target/
 /.settings/
 /.pydevproject
 
+VS Code files
+/.vscode/
+
 # DLS build dir and virtual environment
 /prefix/
 /venv/

@@ -1,0 +1,83 @@
+import logging
+import re
+
+
+def pv_format_check(word: str) -> bool:
+    """Check the PV against the format of a PV"""
+    if re.match(
+        "[A-Z]{2}(?:[0-9][A-Z0-9][A-Z]){0,1}-[A-Z]{2}-[A-Z][A-Z0-9]{0,4}-[0-9]{2}(?::[a-zA-Z0-9_.-]+)*$",
+        word,
+    ):
+        return True
+    else:
+        return False
+
+
+def pv_format_report(pv: str) -> list:
+    """Produce a dictionary detailing errors with the pv format"""
+    errors = []
+
+    # Get the device name
+    device = pv.split(":")[0]
+    logging.debug(f"Device: {device}")
+
+    # Check uppercase
+    if device.upper() != device:
+        errors.append("PV device name must not contain lowercase characters")
+
+    # Check underscores
+    if "_" in device:
+        errors.append("PV must not contain underscores in device name")
+
+    # Check there are enough elements to test
+    if (len(re.split("[-_]", device)) != 4) or not all(
+        [element != "" for element in re.split("[-_]", device)]
+    ):
+        errors.append(
+            "Device name must contain 4 elements separated by hyphens: Domain-TechnicalArea-Component-Identifier"
+        )
+    else:
+        # Detailed inspection of device name elements
+        [domain, technical_area, component, identifier] = re.split("[-_]", device)
+        logging.debug(f"Domain: {domain}")
+        if not re.match("^[A-Z]{2}", domain):
+            errors.append(
+                f"Domain in {domain} should be composed of two capital letters"
+            )
+        if len(domain) > 2:
+            if not re.match("^[0-9][A-Z0-9][A-Z]$", domain[2:]):
+                errors.append(
+                    f"Subdomain in {domain} should be composed of a number, alphanumeric, and a letter"
+                )
+
+        logging.debug(f"Tech Area: {technical_area}")
+        if not re.match("^[A-Z]{2}$", technical_area):
+            errors.append(f"Technical Area of {technical_area} must contain 2 letters")
+
+        logging.debug(f"Component: {component}")
+        if not re.match("^[A-Z][A-Z0-9]{0,4}$", component):
+            errors.append(
+                f"Component of {component} must contain up to five alphanumeric characters, first character must be letter"
+            )
+
+        logging.debug(f"Identifier: {identifier}")
+        if not re.match("^[0-9]{2}$", identifier):
+            errors.append(f"Identifier of {identifier} must contain only 2 numbers")
+            if "O" in identifier:
+                errors.append(
+                    "Found capital letter O in identifier, expected number zero"
+                )
+
+    logging.debug(f"Errors: {errors}")
+    return errors
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
+
+    print(pv_format_check("BL16I-Ea_IO01-:MOTOR:Y"))
+    pv_format_report("BL16I-Ea_IO01-:MOTOR:Y")
+    print(pv_format_check("B1I6I-EAA-IOCSADSSD-O1:MOTOR:Y"))
+    pv_format_report("B1I6I-EAA-IOCSADSSD-O1:MOTOR:Y")
+    print(pv_format_check("BL16I-EA-IOC-01"))
+    pv_format_report("BL16I-EA-IOC-01")
