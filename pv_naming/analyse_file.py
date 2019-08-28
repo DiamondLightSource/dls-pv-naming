@@ -9,7 +9,7 @@ from pv_format_check import pv_format_check, pv_format_report
 record_regex = '(?<=^record)(?:.*)(?<=")(.*)"'
 
 
-def record_file_report(record_text: str, database_info: dict = empty_database) -> dict:
+def record_text_report(record_text: str, database_info: dict = empty_database) -> dict:
     """
     Analyse a .db records file to find the records, extract a list of unique device names and then
     check them against the specified Diamond format and the database to produce a useful report.
@@ -91,24 +91,37 @@ def get_record_pvs(record_text: str) -> List[str]:
     return [pv for pv in re.findall(record_regex, record_text, flags=re.MULTILINE)]
 
 
-def connection_record_file_report(filename: str) -> dict:
+def record_file_report(filename: str, database_info: dict) -> dict:
     """Read the contents of the file, fetch the information from the database and return a report"""
     with open(filename, "r") as fp:
         file_text = fp.read()
 
+    return record_text_report(file_text, database_info)
+
+
+def record_file_report_many(filename_list: List[str], database_info: dict) -> dict:
+    """Produce a report for each of the files requested"""
+    initial_reports = {
+        filename: record_file_report(filename) for filename in filename_list
+    }
+
+    # Only return names of files which returned a report
+    return {filename: report for filename, report in initial_reports if report}
+
+
+if __name__ == "__main__":
+
     database_info = fetch_information()
 
-    return record_file_report(file_text, database_info)
-
-
-record_file_report(
-    '''record(ai, "BL6I-EA-IOC-01")
-record(ai, "ME16I-EA-IOC-01"''',
-    fetch_information(),
-)
-
-print(
-    connection_record_file_report(
-        "/dls_sw/prod/R3.14.12.7/ioc/BL18B/BL18B-EA-IOC-14/2-0/db/BL18B-EA-IOC-14_expanded.db"
+    record_text_report(
+        '''record(ai, "BL6I-EA-IOC-01")
+    record(ai, "ME16I-EA-IOC-01"''',
+        database_info,
     )
-)
+
+    print(
+        record_file_report(
+            "/dls_sw/prod/R3.14.12.7/ioc/BL18B/BL18B-EA-IOC-14/2-0/db/BL18B-EA-IOC-14_expanded.db",
+            database_info,
+        )
+    )
