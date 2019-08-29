@@ -16,7 +16,7 @@ def report_latest_ioc_dbs():
     reports = record_file_report_many(latest_ioc_dbs, database_info)
 
     with open("/scratch/ioc_reports.json", "w") as fp:
-        json.dump(reports, fp, indent=4)
+        json.dump(reports, fp, indent=2)
 
 
 if __name__ == "__main__":
