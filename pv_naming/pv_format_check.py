@@ -22,8 +22,7 @@ def get_device_name(pv: str) -> str:
 
     if ":" in pv:
         device = pv.split(":")[0]
-
-    if len(re.split("[-_]", device)) >= 4:
+    elif len(re.split("[-_]", device)) > 4:
         elements = re.split("[-_]", device)
         # Just the identifier
         initial_element = elements[3]
@@ -110,10 +109,11 @@ if __name__ == "__main__":
 
     get_device_name("BL18I-EA-IOC_03B")
 
-    print(pv_format_check("BL16I-Ea_IO01-:MOTOR:Y"))
-    pv_format_report("BL16I-Ea_IO01-:MOTOR:Y")
-    print(pv_format_check("B1I6I-EAA-IOCSADSSD-O1:MOTOR:Y"))
-    pv_format_report("B1I6I-EAA-IOCSADSSD-O1:MOTOR:Y")
-    print(pv_format_check("BL16I-EA-IOC-01"))
-    pv_format_report("BL16I-EA-IOC-01")
+    # print(pv_format_check("BL16I-Ea_IO01-:MOTOR:Y"))
+    # pv_format_report("BL16I-Ea_IO01-:MOTOR:Y")
+    # print(pv_format_check("B1I6I-EAA-IOCSADSSD-O1:MOTOR:Y"))
+    # pv_format_report("B1I6I-EAA-IOCSADSSD-O1:MOTOR:Y")
+    # print(pv_format_check("BL16I-EA-IOC-01"))
+    # pv_format_report("BL16I-EA-IOC-01")
     pv_format_report("BL02I-EA-IOC-04SR_0_Time")
+    pv_format_report("BL02I-EA-IOC-04SR_deadIfZero")

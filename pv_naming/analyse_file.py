@@ -1,3 +1,4 @@
+import copy
 import logging
 import re
 from typing import List
@@ -42,7 +43,7 @@ def record_text_report(record_text: str, database_info: dict = empty_database) -
     # Collect a dictionary of device occurrences which splits on a colon to separate device names
     device_occurences = {}
     for pv in unique_record_pvs:
-        device_name = get_device_name(pv)
+        device_name = pv.split(":")[0]
         if device_name not in device_occurences:
             device_occurences[device_name] = [pv]
         else:
@@ -50,17 +51,47 @@ def record_text_report(record_text: str, database_info: dict = empty_database) -
     logging.debug(f"Found {len(device_occurences)} device names")
 
     # Check basic pv formatting
-    good_format_device_names = [d for d in unique_record_pvs if pv_format_check(d)]
-    bad_format_device_names = [d for d in unique_record_pvs if not pv_format_check(d)]
+    good_format_device_names = [d for d in device_occurences if pv_format_check(d)]
+    bad_format_device_names = [d for d in device_occurences if not pv_format_check(d)]
 
     # Produce report for PVs which failed basic formatting tests
     format_report = {
-        get_device_name(device): {
+        device: {
             "errors": pv_format_report(device),
-            "occurences": device_occurences[get_device_name(device)],
+            "occurences": device_occurences[device],
         }
         for device in bad_format_device_names
     }
+
+    # Clear the report of duplicated near misses on missing colons
+    curated_format_report = {}
+    for device in format_report:
+        if get_device_name(device) not in curated_format_report:
+            curated_format_report[get_device_name(device)] = {
+                "errors": copy.deepcopy(format_report[device]["errors"]),
+                "occurences": copy.deepcopy(format_report[device]["occurences"]),
+            }
+        else:
+            # Maintain set of unique errors / warnings per device name
+            try:
+                curated_format_report[get_device_name(device)]["errors"] = list(
+                    set(
+                        curated_format_report[get_device_name(device)]["errors"]
+                        + format_report[device]["errors"]
+                    )
+                )
+
+                # Occurences should be unique anyway
+                curated_format_report[get_device_name(device)]["occurences"].append(
+                    *format_report[device]["occurences"]
+                )
+            except TypeError:
+                logging.error(f"Device: {device}")
+                existing_errors = format_report[device]["errors"]
+                logging.error(f"Errors: {existing_errors}")
+                new_errors = curated_format_report[get_device_name(device)]["errors"]
+                logging.error(f"Existing errors: {new_errors}")
+                raise
 
     # Find PVs which passed the formatting tests but cannot be located in the database
     bad_database_device_names = [
@@ -69,9 +100,9 @@ def record_text_report(record_text: str, database_info: dict = empty_database) -
 
     # Produce report for PVs which failed database check
     database_report = {
-        get_device_name(device): {
+        device: {
             "errors": pv_database_report(device, database_info),
-            "occurences": device_occurences[get_device_name(device)],
+            "occurences": device_occurences[device],
         }
         for device in bad_database_device_names
     }
@@ -79,7 +110,7 @@ def record_text_report(record_text: str, database_info: dict = empty_database) -
     output_report = {}
 
     if format_report:
-        output_report.update({"Format errors": format_report})
+        output_report.update({"Format errors": curated_format_report})
     if database_report:
         output_report.update({"Database errors": database_report})
 
@@ -119,8 +150,11 @@ if __name__ == "__main__":
 record(ai, "ME16I-EA-IOC-01"
 record(ai, "BL02I-EA-IOC-04SR_5_Status")
 record(ai, "BL02I-EA-IOC-04SR_deadIfZero")
+record(ai, "BL02I-EA-IOC-04:CORRECT:FORMAT")
 record(ai, "BL14I-VA-VLVCC-03B")
-record(ai, "BL14I-VA-VLVCC-03B:Some:Other:Things")""",
+record(ai, "BL14I-VA-VLVCC-03B:Some:Other:Things")
+record(ai, "BL14I-VA-VLCCC-03:ALSO:CORRECT") 
+record(ai, "BL02I-EA-IOC-04SR_7_Name") """,
         database_info,
     )
 
