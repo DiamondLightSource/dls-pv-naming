@@ -3,9 +3,9 @@ import logging
 import re
 from typing import List
 
-from fetch_info import fetch_information
-from pv_database_check import pv_database_check, pv_database_report, empty_database
-from pv_format_check import get_device_name, pv_format_check, pv_format_report
+from pv_naming.fetch_info import fetch_information
+from pv_naming.pv_database_check import pv_database_check, pv_database_report, empty_database
+from pv_naming.pv_format_check import get_device_name, pv_format_check, pv_format_report
 
 record_regex = '(?<=^record)(?:.*)(?<=")(.*)"'
 

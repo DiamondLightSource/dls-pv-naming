@@ -2,7 +2,7 @@ import logging
 import re
 from typing import List
 
-from fetch_info import fetch_information
+from pv_naming.fetch_info import fetch_information
 
 # Empty version of database expected by pv_database_check
 empty_database = {

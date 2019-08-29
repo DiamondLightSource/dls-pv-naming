@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "e75e2f4045546c3e1b102e8dc77c4a8a54273a4afc0e0cef2e7d4b8f6679e978"
+            "sha256": "712dbed7851298f519e53d14d52c7c2cd20ad608b1f5ad4f3e10d14a5621923d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -44,6 +44,10 @@
             ],
             "index": "pypi",
             "version": "==6.0.0"
+        },
+        "pvnaming": {
+            "editable": true,
+            "path": "."
         },
         "requests": {
             "hashes": [

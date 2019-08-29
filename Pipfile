@@ -9,6 +9,7 @@ black = "*"
 [packages]
 requests = "*"
 natsort = "*"
+pvnaming = {editable = true,path = "."}
 
 [requires]
 python_version = "3.7"
