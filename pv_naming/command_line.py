@@ -31,12 +31,8 @@ def command_line_report_builder_iocs():
 
     report = report_builder_iocs(args.builder_dir)
 
-    if args.output:
-        with open(args.output, "w") as fp:
-            json.dump(report, fp, indent=2)
-    elif args.verbose:
-        print(json.dumps(report, indent=2))
-    else:
+    # Summarise the report if required
+    if args.verbose is False:
         for filename in report:
             for error_type in report[filename]:
                 for device in report[filename][error_type]:
@@ -45,4 +41,9 @@ def command_line_report_builder_iocs():
                         report[filename][error_type][device]["occurences"] = report[
                             filename
                         ][error_type][device]["occurences"][:3] + ["..."]
+
+    if args.output:
+        with open(args.output, "w") as fp:
+            json.dump(report, fp, indent=2)
+    else:
         print(json.dumps(report, indent=2))
