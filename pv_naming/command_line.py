@@ -11,7 +11,7 @@ def command_line_report_builder_iocs():
     )
 
     argument_parser.add_argument(
-        "builder_dir", default=".", help="top level builder directory to inspect"
+        "--builder_dir", default=".", help="top level builder directory to inspect"
     )
 
     argument_parser.add_argument(
