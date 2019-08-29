@@ -20,7 +20,12 @@ def get_device_name(pv: str) -> str:
     # Default assignment
     device = pv
 
-    if ":" in pv:
+    # Return front end of multiple colon problems (keep as much common as possible)
+    if re.search(":{2,}", pv):
+        # Look for multiple colons and take first matching group
+        # Include the colons to separate from similar device names
+        device = re.match("((.*):{2,})", pv).group(0)
+    elif ":" in pv:
         device = pv.split(":")[0]
     elif len(re.split("[-_]", device)) > 4:
         elements = re.split("[-_]", device)
@@ -39,6 +44,9 @@ def get_device_name(pv: str) -> str:
 def pv_format_report(pv: str) -> List[str]:
     """Produce a dictionary detailing errors with the pv format"""
     errors = []
+
+    if re.search(":{2,}", pv):
+        errors.append("Only use single colons to separate device and subdevices")
 
     # Get the device name
     if (

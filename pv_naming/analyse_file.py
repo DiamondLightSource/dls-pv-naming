@@ -4,7 +4,11 @@ import re
 from typing import List
 
 from pv_naming.fetch_info import fetch_information
-from pv_naming.pv_database_check import pv_database_check, pv_database_report, empty_database
+from pv_naming.pv_database_check import (
+    pv_database_check,
+    pv_database_report,
+    empty_database,
+)
 from pv_naming.pv_format_check import get_device_name, pv_format_check, pv_format_report
 
 record_regex = '(?<=^record)(?:.*)(?<=")(.*)"'
@@ -43,7 +47,7 @@ def record_text_report(record_text: str, database_info: dict = empty_database) -
     # Collect a dictionary of device occurrences which splits on a colon to separate device names
     device_occurences = {}
     for pv in unique_record_pvs:
-        device_name = pv.split(":")[0]
+        device_name = pv.split(":")[0] if "::" not in pv else pv
         if device_name not in device_occurences:
             device_occurences[device_name] = [pv]
         else:
@@ -154,7 +158,8 @@ record(ai, "BL02I-EA-IOC-04:CORRECT:FORMAT")
 record(ai, "BL14I-VA-VLVCC-03B")
 record(ai, "BL14I-VA-VLVCC-03B:Some:Other:Things")
 record(ai, "BL14I-VA-VLCCC-03:ALSO:CORRECT") 
-record(ai, "BL02I-EA-IOC-04SR_7_Name") """,
+record(ai, "BL02I-EA-IOC-04SR_7_Name") 
+record(ai, "BL02I-EA-IOC-04::SR_7_Name")  """,
         database_info,
     )
 
