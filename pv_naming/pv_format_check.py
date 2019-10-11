@@ -25,9 +25,10 @@ def get_device_name(pv: str) -> str:
         # Look for multiple colons and take first matching group
         # Include the colons to separate from similar device names
         device = re.match("((.*):{2,})", pv).group(0)
-    elif ":" in pv:
-        device = pv.split(":")[0]
-    elif len(re.split("[-_]", device)) > 4:
+    elif len(re.split("[-_]", device)) >= 4:
+        # Get the first group
+        if ":" in pv:
+            device = pv.split(":")[0]
         elements = re.split("[-_]", device)
         # Just the identifier
         initial_element = elements[3]
@@ -53,8 +54,13 @@ def pv_format_report(pv: str) -> List[str]:
         len(re.split("[-_]", pv)) > 4
         and ":" not in pv
         and len(re.split("[-_]", pv)[3]) > 2
-    ):
-        errors.append("Missing a colon after the device name")
+    ) or (get_device_name(pv) != pv.split(":")[0]):
+        # Don't add an unnecessary error here
+        # If the report has already added an error based on 2 colons, it doesn't need another
+        # one saying you are missing colons
+        if len(errors) == 0:
+            errors.append("Missing a colon after the device name")
+        # Do still strip the name down though
         device = get_device_name(pv)
     else:
         device = pv.split(":")[0]
@@ -101,7 +107,8 @@ def pv_format_report(pv: str) -> List[str]:
             )
 
         logging.debug(f"Identifier: {identifier}")
-        if not re.match("^[0-9]{2}$", identifier):
+        # Make an exception for extra colons which will have been reported further up
+        if not re.match("^[0-9]{2}$", identifier.split(":")[0]):
             errors.append(f"Identifier of {identifier} must contain only 2 numbers")
             if "O" in identifier:
                 errors.append(
@@ -117,11 +124,11 @@ if __name__ == "__main__":
 
     get_device_name("BL18I-EA-IOC_03B")
 
-    # print(pv_format_check("BL16I-Ea_IO01-:MOTOR:Y"))
-    # pv_format_report("BL16I-Ea_IO01-:MOTOR:Y")
-    # print(pv_format_check("B1I6I-EAA-IOCSADSSD-O1:MOTOR:Y"))
-    # pv_format_report("B1I6I-EAA-IOCSADSSD-O1:MOTOR:Y")
-    # print(pv_format_check("BL16I-EA-IOC-01"))
-    # pv_format_report("BL16I-EA-IOC-01")
+    print(pv_format_check("BL16I-Ea_IO01-:MOTOR:Y"))
+    pv_format_report("BL16I-Ea_IO01-:MOTOR:Y")
+    print(pv_format_check("B1I6I-EAA-IOCSADSSD-O1:MOTOR:Y"))
+    pv_format_report("B1I6I-EAA-IOCSADSSD-O1:MOTOR:Y")
+    print(pv_format_check("BL16I-EA-IOC-01"))
+    pv_format_report("BL16I-EA-IOC-01")
     pv_format_report("BL02I-EA-IOC-04SR_0_Time")
     pv_format_report("BL02I-EA-IOC-04SR_deadIfZero")
