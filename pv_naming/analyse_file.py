@@ -158,6 +158,9 @@ record(ai, "BL02I-EA-IOC-04:CORRECT:FORMAT")
 record(ai, "BL14I-VA-VLVCC-03B")
 record(ai, "BL14I-VA-VLVCC-03B:Some:Other:Things")
 record(ai, "BL14I-VA-VLCCC-03:ALSO:CORRECT") 
+record(ai, "BL16I-EA-K65-01Int") 
+record(ai, "BL16I-EA-K65-01KeyDispNext") 
+record(ai, "BL16I-EA-K65-01KeyLeftArrow") 
 record(ai, "BL02I-EA-IOC-04SR_7_Name") 
 record(ai, "BL02I-EA-IOC-04::SR_7_Name")  """,
         database_info,
