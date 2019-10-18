@@ -71,6 +71,31 @@ def pv_database_check(pv: str, database_info: dict = empty_database) -> bool:
     return True
 
 
+def split_into_elements(pv: str):
+    try:
+        [domainGroup, technical_area, component, identifier] = re.split(
+            "[-_]", pv.split(":")[0]
+        )
+    except ValueError:
+        logging.error("Not enough values to unpack")
+        raise
+
+    # Split domain and subdomain
+    if len(domainGroup) > 2:
+        domain = domainGroup[:2]
+        subdomain = domainGroup[2:]
+    else:
+        domain = domainGroup
+        subdomain = None
+
+    return {
+        "domain": domain,
+        "subdomain": subdomain,
+        "technical_area": technical_area,
+        "component": component,
+    }
+
+
 def pv_database_report(pv: str, database_info: dict = empty_database) -> List[str]:
     """
     Return found issues
