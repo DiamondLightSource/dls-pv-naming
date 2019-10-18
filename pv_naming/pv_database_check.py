@@ -88,12 +88,7 @@ def split_into_elements(pv: str):
         domain = domainGroup
         subdomain = None
 
-    return {
-        "domain": domain,
-        "subdomain": subdomain,
-        "technical_area": technical_area,
-        "component": component,
-    }
+    return [domain, subdomain, technical_area, component, identifier]
 
 
 def pv_database_report(pv: str, database_info: dict = empty_database) -> List[str]:

@@ -22,6 +22,20 @@ def fetch_from_rdb(request_address: str, key: str, value: str) -> dict:
         return False
 
 
+def fetch_value_rdb(request_address: str, key: str) -> dict:
+    """Get list of all the components"""
+    resp = requests.get(request_address)
+    if resp.status_code != 200:
+        # This means something went wrong.
+        raise Exception(f"GET /tasks/ {resp.status_code}")
+    data = resp.json()
+    if "Error" not in data:
+        first_key = list(data[0].keys())[0]
+        return data[0][first_key][0][key]
+    else:
+        return None
+
+
 def fetch_all_from_rdb(request_address: str, key: str, value: str) -> dict:
     """Get all component information from the database"""
     logging.debug(f"Reading information from {request_address}")
