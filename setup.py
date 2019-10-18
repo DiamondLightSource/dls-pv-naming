@@ -15,7 +15,7 @@ setup(
     packages=["pv_naming"],
     entry_points={
         "console_scripts": [
-            "builder_report = pv_naming.command_line:command_line_report_builder_iocs",
+            "builder_report = pv_naming.command_line.builder_report:command_line_report_builder_iocs",
             "device_check = pv_naming.command_line.checker:command_line_check"
         ]
     },  # this makes a script
