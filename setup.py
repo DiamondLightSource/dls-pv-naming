@@ -16,7 +16,7 @@ setup(
     entry_points={
         "console_scripts": [
             "builder_report = pv_naming.command_line.builder_report:command_line_report_builder_iocs",
-            "device_check = pv_naming.command_line.checker:command_line_check"
+            "device_check = pv_naming.command_line.checker:command_line_check",
         ]
     },  # this makes a script
     #    include_package_data = True, # use this to include non python files
