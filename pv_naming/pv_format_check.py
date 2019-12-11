@@ -118,18 +118,3 @@ def pv_format_report(pv: str) -> List[str]:
 
     logging.debug(f"Errors: {errors}")
     return errors
-
-
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG)
-
-    get_device_name("BL18I-EA-IOC_03B")
-
-    print(pv_format_check("BL16I-Ea_IO01-:MOTOR:Y"))
-    pv_format_report("BL16I-Ea_IO01-:MOTOR:Y")
-    print(pv_format_check("B1I6I-EAA-IOCSADSSD-O1:MOTOR:Y"))
-    pv_format_report("B1I6I-EAA-IOCSADSSD-O1:MOTOR:Y")
-    print(pv_format_check("BL16I-EA-IOC-01"))
-    pv_format_report("BL16I-EA-IOC-01")
-    pv_format_report("BL02I-EA-IOC-04SR_0_Time")
-    pv_format_report("BL02I-EA-IOC-04SR_deadIfZero")
