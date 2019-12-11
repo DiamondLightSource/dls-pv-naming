@@ -1,0 +1,41 @@
+include:
+  - project: "controls/reports/ci_templates"
+    ref: 0-11
+    file: "all_templates.yml"
+
+stages:
+  - run tests
+  - static code checks
+  - publish coverage
+  - publish docs
+
+# Run unit tests, make coverage report and build docs
+Unit tests and coverage:
+  stage: run tests
+  extends:
+    - .template_py3_pytest_and_coverage
+  variables:
+    COVERAGE_ARGS: --cov=burt --cov-report term-missing --cov-fail-under 90
+    TEST_DIR: test
+  artifacts:
+    paths:
+      # Pass on virtualenv, coverage and built docs to following stages
+      - .coverage
+      - docs/_build/html/
+    expire_in: 10 min
+
+# Run our custom flake8 and black checks
+Static code checks:
+  tags:
+    - rhel7
+  stage: static code checks
+  variables:
+    FLAKE8_MODULES: burt test
+    BLACK_MODULES: burt test
+  extends:
+    - .flake8_and_black
+
+# Publish coverage html report to common location
+Publish coverage:
+  stage: publish coverage
+  extends: .template_publish_coverage
