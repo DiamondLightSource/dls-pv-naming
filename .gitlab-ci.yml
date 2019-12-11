@@ -30,8 +30,8 @@ Static code checks:
     - rhel7
   stage: static code checks
   variables:
-    FLAKE8_MODULES: burt test
-    BLACK_MODULES: burt test
+    FLAKE8_MODULES: pv_naming
+    BLACK_MODULES: pv_naming
   extends:
     - .flake8_and_black
 

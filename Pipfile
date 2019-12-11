@@ -13,6 +13,9 @@ natsort = "*"
 pvnaming = {editable = true,path = "."}
 pytest = "*"
 pytest-cov = "*"
+flake8 = "*"
+flake8-import-order = "*"
+black = "==19.3b0"
 
 [pipenv]
 allow_prereleases = true
