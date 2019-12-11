@@ -16,6 +16,7 @@ pytest-cov = "*"
 flake8 = "*"
 flake8-import-order = "*"
 black = "==19.3b0"
+pre-commit = "*"
 
 [pipenv]
 allow_prereleases = true
