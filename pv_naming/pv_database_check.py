@@ -1,11 +1,11 @@
 import logging
 import re
-from typing import List
+from typing import List, Optional
 
 from pv_naming.fetch_info import fetch_information
 
 # Empty version of database expected by pv_database_check
-empty_database = {
+empty_database: dict = {
     "domain": {},
     "subdomain": {},
     "domain_pair": {},
@@ -30,7 +30,7 @@ def pv_database_check(pv: str, database_info: dict = empty_database) -> bool:
     # Split domain and subdomain
     if len(domainGroup) > 2:
         domain = domainGroup[:2]
-        subdomain = domainGroup[2:]
+        subdomain: Optional[str] = domainGroup[2:]
     else:
         domain = domainGroup
         subdomain = None
@@ -43,7 +43,7 @@ def pv_database_check(pv: str, database_info: dict = empty_database) -> bool:
         return False
 
     # Check subdomain exists and is paired with the correct domain
-    if subdomain:
+    if subdomain is not None:
         logging.debug(f"Subdomain: {subdomain}")
         if subdomain not in database_info["subdomain"]:
             return False
@@ -81,7 +81,7 @@ def split_into_elements(pv: str):
     # Split domain and subdomain
     if len(domainGroup) > 2:
         domain = domainGroup[:2]
-        subdomain = domainGroup[2:]
+        subdomain: Optional[str] = domainGroup[2:]
     else:
         domain = domainGroup
         subdomain = None
@@ -110,7 +110,7 @@ def pv_database_report(pv: str, database_info: dict = empty_database) -> List[st
     # Split domain and subdomain
     if len(domainGroup) > 2:
         domain = domainGroup[:2]
-        subdomain = domainGroup[2:]
+        subdomain: Optional[str] = domainGroup[2:]
     else:
         domain = domainGroup
         subdomain = None

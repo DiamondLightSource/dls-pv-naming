@@ -3,7 +3,7 @@ import logging
 from pathlib import Path
 from typing import List
 
-from natsort import natsorted
+from natsort import natsorted  # type: ignore
 
 
 def find_latest_ioc_db_filenames() -> List[str]:

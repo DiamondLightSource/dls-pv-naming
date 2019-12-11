@@ -24,7 +24,8 @@ def get_device_name(pv: str) -> str:
     if re.search(":{2,}", pv):
         # Look for multiple colons and take first matching group
         # Include the colons to separate from similar device names
-        device = re.match("((.*):{2,})", pv).group(0)
+        # Can't type check this at - see https://github.com/python/mypy/issues/7503
+        device = re.match("((.*):{2,})", pv).group(0)  # type: ignore
     elif len(re.split("[-_]", device)) >= 4:
         # Get the first group
         if ":" in pv:

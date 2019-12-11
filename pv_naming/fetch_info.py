@@ -3,12 +3,13 @@ Fetch information from the database
 """
 
 import logging
-import requests
 import time
-from typing import List
+from typing import List, Optional
+
+import requests
 
 
-def fetch_from_rdb(request_address: str, key: str, value: str) -> dict:
+def fetch_from_rdb(request_address: str, key: str, value: str) -> Optional[dict]:
     """Get list of all the components"""
     resp = requests.get(request_address)
     if resp.status_code != 200:
@@ -19,10 +20,10 @@ def fetch_from_rdb(request_address: str, key: str, value: str) -> dict:
         first_key = list(data[0].keys())[0]
         return {element[key]: element[value] for element in data[0][first_key]}
     else:
-        return False
+        return None
 
 
-def fetch_value_rdb(request_address: str, key: str) -> dict:
+def fetch_value_rdb(request_address: str, key: str) -> Optional[dict]:
     """Get list of all the components"""
     resp = requests.get(request_address)
     if resp.status_code != 200:
@@ -39,10 +40,10 @@ def fetch_value_rdb(request_address: str, key: str) -> dict:
 def fetch_all_from_rdb(request_address: str, key: str, value: str) -> dict:
     """Get all component information from the database"""
     logging.debug(f"Reading information from {request_address}")
-    component_data = {}
-    comps = {}
+    component_data: dict = {}
+    comps: Optional[dict] = {}
     page_num = 1
-    while (comps is not False) and (comps.keys() is not component_data.keys()):
+    while (comps is not None) and (comps.keys() is not component_data.keys()):
         component_data.update(comps)
         comps = fetch_from_rdb(
             f"{request_address}?page={page_num}&recordsperpage=500", key, value
@@ -51,7 +52,7 @@ def fetch_all_from_rdb(request_address: str, key: str, value: str) -> dict:
     return component_data
 
 
-def fetch_pairs(request_address: str, key: str, value: str) -> dict:
+def fetch_pairs(request_address: str, key: str, value: str) -> Optional[dict]:
     """
     Special function to extract lists of values which are paired together
     Prime example is getting lists of all subdomains which match a particular domain,
@@ -66,7 +67,7 @@ def fetch_pairs(request_address: str, key: str, value: str) -> dict:
         first_key = list(data[0].keys())[0]
         # Generate list of matching balues from key to value
         # return {key: [value, value, value], ...}
-        pairs = {}
+        pairs: dict = {}
         for element in data[0][first_key]:
             if element[key] not in pairs:
                 # Start a list
@@ -76,7 +77,7 @@ def fetch_pairs(request_address: str, key: str, value: str) -> dict:
                 pairs[element[key]].append(element[value])
         return pairs
     else:
-        return False
+        return None
 
 
 def fetch_information() -> dict:
@@ -153,7 +154,3 @@ if __name__ == "__main__":
         "componentname",
     )
     print(f"Took {time.time() - t}")
-
-    print(len(domains))
-    print(len(techareas))
-    print(len(comps))

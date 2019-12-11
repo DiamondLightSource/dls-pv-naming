@@ -5,9 +5,9 @@ from typing import List
 
 from pv_naming.fetch_info import fetch_information
 from pv_naming.pv_database_check import (
+    empty_database,
     pv_database_check,
     pv_database_report,
-    empty_database,
 )
 from pv_naming.pv_format_check import get_device_name, pv_format_check, pv_format_report
 
@@ -45,7 +45,7 @@ def record_text_report(record_text: str, database_info: dict = empty_database) -
     logging.debug(f"Found {len(unique_record_pvs)} unique pvs")
 
     # Collect a dictionary of device occurrences which splits on a colon to separate device names
-    device_occurences = {}
+    device_occurences: dict = {}
     for pv in unique_record_pvs:
         device_name = pv.split(":")[0] if "::" not in pv else pv
         if device_name not in device_occurences:
@@ -68,7 +68,7 @@ def record_text_report(record_text: str, database_info: dict = empty_database) -
     }
 
     # Clear the report of duplicated near misses on missing colons
-    curated_format_report = {}
+    curated_format_report: dict = {}
     for device in format_report:
         if get_device_name(device) not in curated_format_report:
             curated_format_report[get_device_name(device)] = {
