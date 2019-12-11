@@ -54,7 +54,6 @@ def fetch_all_from_rdb(request_address: str, key: str, value: str) -> dict:
 def fetch_pairs(request_address: str, key: str, value: str) -> dict:
     """
     Special function to extract lists of values which are paired together
-    
     Prime example is getting lists of all subdomains which match a particular domain,
     and the inverse, all of the domains which match a particular subdomain.
     """

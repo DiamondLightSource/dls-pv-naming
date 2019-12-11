@@ -20,7 +20,7 @@ def device_check(device_name: str) -> str:
     # Collect all necessary information
     database_dict = fetch_information()
 
-    if pv_format_check(device_name) == False:
+    if pv_format_check(device_name) is False:
         result["comments"] = [
             "Device does not match format:",
             *pv_format_report(device_name),

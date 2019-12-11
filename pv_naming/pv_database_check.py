@@ -18,8 +18,6 @@ empty_database = {
 def pv_database_check(pv: str, database_info: dict = empty_database) -> bool:
     """
     Check that the values of the PV match database records
-    
-    :param: 
     """
     try:
         [domainGroup, technical_area, component, identifier] = re.split(
@@ -94,8 +92,7 @@ def split_into_elements(pv: str):
 def pv_database_report(pv: str, database_info: dict = empty_database) -> List[str]:
     """
     Return found issues
-    
-    :param: 
+    :param:
     """
     errors = []
 
