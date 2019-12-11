@@ -15,7 +15,7 @@ Unit tests and coverage:
   extends:
     - .template_py3_pytest_and_coverage
   variables:
-    COVERAGE_ARGS: --cov-report
+    COVERAGE_ARGS: --cov=pv_naming --cov-report term-missing
     TEST_DIR: "pv_naming/tests"
   artifacts:
     paths:
