@@ -17,6 +17,7 @@ flake8 = "*"
 flake8-import-order = "*"
 black = "==19.3b0"
 pre-commit = "*"
+mypy = "*"
 
 [pipenv]
 allow_prereleases = true
