@@ -154,15 +154,3 @@ def pv_database_report(pv: str, database_info: dict = empty_database) -> List[st
             errors.append("Found capital letter O in identifier, expected number zero")
 
     return errors
-
-
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG)
-
-    database_info = fetch_information()
-    # Some tests
-    print(pv_database_check("BL16I-EA-IOC-02:MOTOR:TIM"))
-    print(pv_database_check("BL16I-EA-IOC-02:MOTOR:TIM", database_info=database_info))
-    print(pv_database_check("ME16I-EA-IOC-02:MOTOR:TIM", database_info=database_info))
-    print(pv_database_report("ME16I-EA-IOC-02:MOTOR:TIM", database_info=database_info))
-    print(pv_database_report("LI16I-EA-IOC-02:MOTOR:TIM", database_info=database_info))
