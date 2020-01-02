@@ -6,8 +6,8 @@ import json
 from pv_naming.analyse_file import record_file_report_many
 from pv_naming.fetch_info import fetch_information
 from pv_naming.find_files import (
-    find_latest_ioc_db_filenames,
     find_builder_ioc_filenames,
+    find_latest_ioc_db_filenames,
 )
 
 
@@ -16,18 +16,18 @@ def report_latest_ioc_dbs():
     database_info = fetch_information()
     latest_ioc_dbs = find_latest_ioc_db_filenames()
 
-    reports = record_file_report_many(latest_ioc_dbs, database_info)
+    reports = record_file_report_many(latest_ioc_dbs, database_info, verbose=False)
 
     with open("/scratch/ioc_reports.json", "w") as fp:
         json.dump(reports, fp, indent=2)
 
 
-def report_builder_iocs(builder_directory: str):
+def report_builder_iocs(builder_directory: str, verbose: bool = False):
     """Create a report from all the files in the specified builder directory"""
     database_info = fetch_information()
     builder_ioc_dbs = find_builder_ioc_filenames(builder_directory)
 
-    reports = record_file_report_many(builder_ioc_dbs, database_info)
+    reports = record_file_report_many(builder_ioc_dbs, database_info, verbose)
 
     return reports
 

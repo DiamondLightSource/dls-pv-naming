@@ -29,18 +29,7 @@ def command_line_report_builder_iocs():
 
     args = argument_parser.parse_args()
 
-    report = report_builder_iocs(args.builder_dir)
-
-    # Summarise the report if required
-    if args.verbose is False:
-        for filename in report:
-            for error_type in report[filename]:
-                for device in report[filename][error_type]:
-                    if len(report[filename][error_type][device]["occurences"]) > 3:
-                        # Add elipses after the third value
-                        report[filename][error_type][device]["occurences"] = report[
-                            filename
-                        ][error_type][device]["occurences"][:3] + ["..."]
+    report = report_builder_iocs(args.builder_dir, args.verbose)
 
     if args.output:
         with open(args.output, "w") as fp:

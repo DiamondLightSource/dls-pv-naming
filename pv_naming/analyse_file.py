@@ -134,7 +134,9 @@ def record_file_report(filename: str, database_info: dict) -> dict:
     return record_text_report(file_text, database_info)
 
 
-def record_file_report_many(filename_list: List[str], database_info: dict) -> dict:
+def record_file_report_many(
+    filename_list: List[str], database_info: dict, verbose: bool = False
+) -> dict:
     """Produce a report for each of the files requested"""
     initial_reports = {
         filename: record_file_report(filename, database_info)
@@ -142,7 +144,22 @@ def record_file_report_many(filename_list: List[str], database_info: dict) -> di
     }
 
     # Only return names of files which returned a report
-    return {filename: report for filename, report in initial_reports.items() if report}
+    report = {
+        filename: report for filename, report in initial_reports.items() if report
+    }
+
+    # Summarise errors
+    if verbose is False:
+        for filename in report:
+            for error_type in report[filename]:
+                for device in report[filename][error_type]:
+                    if len(report[filename][error_type][device]["occurences"]) > 3:
+                        # Add elipses after the third value
+                        report[filename][error_type][device]["occurences"] = report[
+                            filename
+                        ][error_type][device]["occurences"][:3] + ["..."]
+
+    return report
 
 
 if __name__ == "__main__":
