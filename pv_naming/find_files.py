@@ -12,7 +12,7 @@ def find_latest_ioc_db_filenames() -> List[str]:
     top_level_dirs = [
         dir for dir in Path("/dls_sw/prod/R3.14.12.3/ioc").iterdir() if dir.is_dir()
     ] + [dir for dir in Path("/dls_sw/prod/R3.14.12.7/ioc").iterdir() if dir.is_dir()]
-    logging.debug(f"Found {len(top_level_dirs)} directories")
+    logging.info(f"Found {len(top_level_dirs)} directories")
 
     ioc_dirs = [
         ioc_dir
@@ -20,7 +20,7 @@ def find_latest_ioc_db_filenames() -> List[str]:
         for ioc_dir in Path(directory).iterdir()
         if ioc_dir.is_dir()
     ]
-    logging.debug(f"Found {len(ioc_dirs)} ioc directories")
+    logging.info(f"Found {len(ioc_dirs)} ioc directories")
 
     ioc_latest_version = [
         natsorted([ioc_version for ioc_version in Path(directory).iterdir()])[-1]
@@ -33,8 +33,10 @@ def find_latest_ioc_db_filenames() -> List[str]:
     expanded_db_files = [
         sorted(db_list, reverse=True)[0] for db_list in expanded_dbs_list if db_list
     ]
-    logging.debug(f"Found {len(expanded_db_files)} database files for analysis")
-    logging.debug(f"Found {len(set(expanded_db_files))} database files for analysis")
+    logging.info(f"Found {len(expanded_db_files)} database files for analysis")
+    logging.info(
+        f"Found {len(set(expanded_db_files))} unique database files for analysis"
+    )
 
     return expanded_db_files
 

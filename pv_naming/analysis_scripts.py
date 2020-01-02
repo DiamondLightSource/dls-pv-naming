@@ -2,6 +2,7 @@
 """
 
 import json
+import logging
 
 from pv_naming.analyse_file import record_file_report_many
 from pv_naming.fetch_info import fetch_information
@@ -15,6 +16,8 @@ def report_latest_ioc_dbs():
     """Produce a report for all of the latest IOC files and save it in scratch as a JSON file"""
     database_info = fetch_information()
     latest_ioc_dbs = find_latest_ioc_db_filenames()
+
+    logging.info("Analysing files now...")
 
     reports = record_file_report_many(latest_ioc_dbs, database_info, verbose=False)
 
@@ -33,4 +36,5 @@ def report_builder_iocs(builder_directory: str, verbose: bool = False):
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     report_latest_ioc_dbs()
