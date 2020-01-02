@@ -47,6 +47,9 @@ def pv_database_check(pv: str, database_info: dict = empty_database) -> bool:
         logging.debug(f"Subdomain: {subdomain}")
         if subdomain not in database_info["subdomain"]:
             return False
+        # Check if domain has any pairs
+        if domain not in database_info["domain_pair"]:
+            return False
         if subdomain not in database_info["domain_pair"][domain]:
             return False
 
