@@ -1,3 +1,7 @@
+[![pipeline status](https://gitlab.diamond.ac.uk/controls/python3/pv-naming/badges/master/pipeline.svg)](https://gitlab.diamond.ac.uk/controls/python3/pv-naming/commits/master)
+[![coverage report](https://gitlab.diamond.ac.uk/controls/python3/pv-naming/badges/master/coverage.svg)](https://gitlab.diamond.ac.uk/controls/python3/pv-naming/commits/master)
+[![Python 3.7](https://upload.wikimedia.org/wikipedia/commons/f/fc/Blue_Python_3.7_Shield_Badge.svg)](https://upload.wikimedia.org/wikipedia/commons/f/fc/Blue_Python_3.7_Shield_Badge.svg)
+
 # PV Naming
 
 Set of tools to help engineers at **Diamond Light Source** to name PVs consistently.
