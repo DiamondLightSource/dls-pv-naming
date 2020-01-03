@@ -1,17 +1,20 @@
 import argparse
 import json
+import logging
 
 from pv_naming.analysis_scripts import report_builder_iocs
 
 
 def command_line_report_builder_iocs():
 
+    logging.basicConfig(level=logging.INFO)
+
     argument_parser = argparse.ArgumentParser(
         description="Produces a report for database files found for the iocs in the builder directory provided"
     )
 
     argument_parser.add_argument(
-        "--builder_dir", default=".", help="top level builder directory to inspect"
+        "builder_dir", default=".", help="top level builder directory to inspect"
     )
 
     argument_parser.add_argument(
@@ -36,3 +39,9 @@ def command_line_report_builder_iocs():
             json.dump(report, fp, indent=2)
     else:
         print(json.dumps(report, indent=2))
+
+    if report == {}:
+        return 0
+    else:
+        # Return non zero value on failure for use as hook
+        return 1

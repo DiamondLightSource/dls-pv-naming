@@ -28,7 +28,7 @@ If the name passes all the checks you will receive a lovely message and if not t
 
 To test whether your builder IOC is creating PV names which match the Diamond convention, build the IOCs and then use:
 
-`pipenv run builder_ioc_naming_report --builder_dir my_dir`
+`pipenv run builder_ioc_naming_report my_dir`
 
 where `my_dir` is the absolute address of the top level builder directory you are interested in.
 This will investigate every IOC in */iocs* and every database in the */db* directory of those IOCs.
@@ -36,7 +36,7 @@ This will investigate every IOC in */iocs* and every database in the */db* direc
 By default, this will print the report to your terminal.
 If you would like to write this to a file, use:
 
-`pipenv run builder_ioc_naming_report --builder_dir my_dir --output /path/to/my/file`
+`pipenv run builder_ioc_naming_report my_dir --output /path/to/my/file`
 
 ## Analyse All IOCs
 

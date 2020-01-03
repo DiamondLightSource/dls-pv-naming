@@ -46,15 +46,15 @@ def find_builder_ioc_filenames(builder_directory: str) -> List[str]:
     ioc_dirs = [
         directory for directory in Path(Path(builder_directory) / "iocs").iterdir()
     ]
-    logging.debug(f"Found {len(ioc_dirs)} ioc directories")
+    logging.info(f"Found {len(ioc_dirs)} ioc directories")
     expanded_dbs_list = [
         glob.glob(str(directory) + "/db/*.db") for directory in ioc_dirs
     ]
     expanded_db_files = [
         sorted(db_list, reverse=True)[0] for db_list in expanded_dbs_list if db_list
     ]
-    logging.debug(f"Found {len(expanded_db_files)} database files for analysis")
-    logging.debug(f"Found {len(set(expanded_db_files))} database files for analysis")
+    logging.info(f"Found {len(expanded_db_files)} database files for analysis")
+    logging.debug(f"Found {len(set(expanded_db_files))} unique database files for analysis")
 
     return expanded_db_files
 
