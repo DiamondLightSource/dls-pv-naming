@@ -52,3 +52,20 @@ If you would like to get a more general feel for how consistent PV naming is in 
 `pipenv run python pv_naming/analysis_scripts.py`
 
 This will produce a file at `/scratch/ioc_reports.json` which provides the output of databases found in the latest version of every ioc in `/dls_sw/prod/R3.14.12.3/ioc` and `/dls_sw/prod/R3.14.12.7/ioc`.
+
+# Development
+
+While developing, please use the pre-commit hooks provided.
+They can be easily activated when installing the package:
+
+```bash
+# Installs the package
+pipenv install
+# Installs the pre-commit hooks
+pipenv run pre-commit install
+```
+
+These hooks are run by the continuous integration job on Gitlab so will otherwise fail.
+They help to keep the code neat, tidy and correct.
+
+Thanks!
