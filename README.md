@@ -38,6 +38,13 @@ If you would like to write this to a file, use:
 
 `pipenv run builder_ioc_naming_report my_dir --output /path/to/my/file`
 
+As the database has not been kept up to date, you might find yourself inundated with database errors.
+To check only for formatting errors, which can usually be fixed in builder or the associated support module, use the `-f` option:
+
+`pipenv run builder_ioc_naming_report -f my_dir`
+
+which will only test against the naming convention.
+
 ## Analyse All IOCs
 
 If you would like to get a more general feel for how consistent PV naming is in our production databases, use:

@@ -30,9 +30,17 @@ def command_line_report_builder_iocs():
         help="add this option to print full list of occurences to the terminal",
     )
 
+    argument_parser.add_argument(
+        "-f",
+        "--format-only",
+        action="store_true",
+        default=False,
+        help="add this option if you do not want to include checks agains the database in the report",
+    )
+
     args = argument_parser.parse_args()
 
-    report = report_builder_iocs(args.builder_dir, args.verbose)
+    report = report_builder_iocs(args.builder_dir, args.verbose, args.format_only)
 
     if args.output:
         with open(args.output, "w") as fp:

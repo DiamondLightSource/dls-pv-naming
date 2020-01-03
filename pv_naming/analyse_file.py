@@ -14,7 +14,7 @@ from pv_naming.pv_format_check import get_device_name, pv_format_check, pv_forma
 record_regex = '(?<=^record)(?:.*)(?<=")(.*)"'
 
 
-def record_text_report(record_text: str, database_info: dict = empty_database) -> dict:
+def record_text_report(record_text: str, database_info: dict = empty_database, format_only: bool = False) -> dict:
     """
     Analyse a .db records file to find the records, extract a list of unique device names and then
     check them against the specified Diamond format and the database to produce a useful report.
@@ -98,9 +98,13 @@ def record_text_report(record_text: str, database_info: dict = empty_database) -
                 raise
 
     # Find PVs which passed the formatting tests but cannot be located in the database
-    bad_database_device_names = [
-        d for d in good_format_device_names if not pv_database_check(d, database_info)
-    ]
+    # Do not perform this check if format_only is set to True
+    if format_only is not True:
+        bad_database_device_names = [
+            d for d in good_format_device_names if not pv_database_check(d, database_info)
+        ]
+    else:
+        bad_database_device_names = []
 
     # Produce report for PVs which failed database check
     database_report = {
@@ -126,20 +130,20 @@ def get_record_pvs(record_text: str) -> List[str]:
     return [pv for pv in re.findall(record_regex, record_text, flags=re.MULTILINE)]
 
 
-def record_file_report(filename: str, database_info: dict) -> dict:
+def record_file_report(filename: str, database_info: dict, format_only: bool = False) -> dict:
     """Read the contents of the file, fetch the information from the database and return a report"""
     with open(filename, "r") as fp:
         file_text = fp.read()
 
-    return record_text_report(file_text, database_info)
+    return record_text_report(file_text, database_info, format_only)
 
 
 def record_file_report_many(
-    filename_list: List[str], database_info: dict, verbose: bool = False
+    filename_list: List[str], database_info: dict, verbose: bool = False, format_only: bool = False
 ) -> dict:
     """Produce a report for each of the files requested"""
     initial_reports = {
-        filename: record_file_report(filename, database_info)
+        filename: record_file_report(filename, database_info, format_only)
         for filename in filename_list
     }
 

@@ -25,12 +25,12 @@ def report_latest_ioc_dbs():
         json.dump(reports, fp, indent=2)
 
 
-def report_builder_iocs(builder_directory: str, verbose: bool = False):
+def report_builder_iocs(builder_directory: str, verbose: bool = False, format_only: bool = False):
     """Create a report from all the files in the specified builder directory"""
     database_info = fetch_information()
     builder_ioc_dbs = find_builder_ioc_filenames(builder_directory)
 
-    reports = record_file_report_many(builder_ioc_dbs, database_info, verbose)
+    reports = record_file_report_many(builder_ioc_dbs, database_info, verbose, format_only)
 
     return reports
 
