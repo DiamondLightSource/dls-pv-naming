@@ -3,6 +3,7 @@ import re
 from typing import List, Optional
 
 from pv_naming.fetch_info import fetch_information
+from pv_naming.split import split_into_elements
 
 # Empty version of database expected by pv_database_check
 empty_database: dict = {
@@ -70,26 +71,6 @@ def pv_database_check(pv: str, database_info: dict = empty_database) -> bool:
 
     # If all of these tests passed, return True
     return True
-
-
-def split_into_elements(pv: str):
-    try:
-        [domainGroup, technical_area, component, identifier] = re.split(
-            "[-_]", pv.split(":")[0]
-        )
-    except ValueError:
-        logging.error("Not enough values to unpack")
-        raise
-
-    # Split domain and subdomain
-    if len(domainGroup) > 2:
-        domain = domainGroup[:2]
-        subdomain: Optional[str] = domainGroup[2:]
-    else:
-        domain = domainGroup
-        subdomain = None
-
-    return [domain, subdomain, technical_area, component, identifier]
 
 
 def pv_database_report(pv: str, database_info: dict = empty_database) -> List[str]:

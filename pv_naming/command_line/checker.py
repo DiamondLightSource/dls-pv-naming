@@ -5,9 +5,9 @@ from pv_naming.fetch_info import fetch_information, fetch_value_rdb
 from pv_naming.pv_database_check import (
     pv_database_check,
     pv_database_report,
-    split_into_elements,
 )
 from pv_naming.pv_format_check import pv_format_check, pv_format_report
+from pv_naming.split import split_into_elements
 
 
 def device_check(device_name: str) -> str:

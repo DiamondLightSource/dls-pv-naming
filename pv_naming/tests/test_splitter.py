@@ -1,4 +1,4 @@
-from pv_naming.pv_database_check import split_into_elements
+from pv_naming.split import split_into_elements
 from pytest import raises
 
 
