@@ -54,7 +54,9 @@ def find_builder_ioc_filenames(builder_directory: str) -> List[str]:
         sorted(db_list, reverse=True)[0] for db_list in expanded_dbs_list if db_list
     ]
     logging.info(f"Found {len(expanded_db_files)} database files for analysis")
-    logging.debug(f"Found {len(set(expanded_db_files))} unique database files for analysis")
+    logging.debug(
+        f"Found {len(set(expanded_db_files))} unique database files for analysis"
+    )
 
     return expanded_db_files
 
