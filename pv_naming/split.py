@@ -1,6 +1,8 @@
 import logging
 import re
 
+from typing import Optional
+
 
 def split_into_elements(pv: str):
     try:
