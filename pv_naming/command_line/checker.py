@@ -1,5 +1,6 @@
 import argparse
 import json
+from typing import List
 
 from pv_naming.fetch_info import fetch_information, fetch_value_rdb
 from pv_naming.pv_database_check import pv_database_check, pv_database_report
@@ -13,7 +14,7 @@ def device_check(device_name: str) -> str:
     # device holds device name, valid holds whether the name passes all checks
     # comments holds a list of strings which provide feedback
     result = {"device": device_name, "valid": False, "comments": []}
-    comments = result["comments"]
+    comments: List[str] = []
 
     # Collect all necessary information
     database_dict = fetch_information()
@@ -49,6 +50,8 @@ def device_check(device_name: str) -> str:
         comments.append(
             f"Component: {component} - {fetch_value_rdb(compsearch, 'componentname')}"
         )
+
+    result["comments"] = comments
 
     return json.dumps(result)
 
