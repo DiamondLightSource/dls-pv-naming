@@ -14,11 +14,11 @@ Hopefully you are at Diamond Light Source and this should just work:
 
 ## Test a PV/Device Name
 
-When you are creating a database or an electical drawing, you may wish to confirm that your names are matching the [Diamond Naming Convention](http://diamvdocs13.diamond.ac.uk/TECHNICAL%20DIVISION%20(TEC)/Controls%20and%20Interlocks%20CTRL/Reports%20(REP)/CTRL-XX-rpt-010%20Proposal%20for%20a%20DIAMOND%20Control%20System%20Naming%20Convention/CTRL-XX-rpt-010%20Proposal%20for%20a%20DIAMOND%20control%20system%20naming%20convention.doc) and that the acronyms you are choosing have been properly recorded in the [Device Database](https://rdb.pri.diamond.ac.uk/php/login/cs_framepage.php).
+When you are creating a database or an electical drawing, you may wish to confirm that your names are matching the [Diamond Naming Convention](<http://diamvdocs13.diamond.ac.uk/TECHNICAL%20DIVISION%20(TEC)/Controls%20and%20Interlocks%20CTRL/Reports%20(REP)/CTRL-XX-rpt-010%20Proposal%20for%20a%20DIAMOND%20Control%20System%20Naming%20Convention/CTRL-XX-rpt-010%20Proposal%20for%20a%20DIAMOND%20control%20system%20naming%20convention.doc>) and that the acronyms you are choosing have been properly recorded in the [Device Database](https://rdb.pri.diamond.ac.uk/php/login/cs_framepage.php).
 
 To perform this check, use:
 
-`pipenv run device_name_check MY-DEVICE-NAME`
+`pipenv run device-name-check MY-DEVICE-NAME`
 
 where `MY-DEVICE-NAME` is the name you wish to verify.
 
@@ -28,20 +28,20 @@ If the name passes all the checks you will receive a lovely message and if not t
 
 To test whether your builder IOC is creating PV names which match the Diamond convention, build the IOCs and then use:
 
-`pipenv run builder_ioc_naming_report my_dir`
+`pipenv run builder-ioc-naming-report my_dir`
 
 where `my_dir` is the absolute address of the top level builder directory you are interested in.
-This will investigate every IOC in */iocs* and every database in the */db* directory of those IOCs.
+This will investigate every IOC in _/iocs_ and every database in the _/db_ directory of those IOCs.
 
 By default, this will print the report to your terminal.
 If you would like to write this to a file, use:
 
-`pipenv run builder_ioc_naming_report my_dir --output /path/to/my/file`
+`pipenv run builder-ioc-naming-report my_dir --output /path/to/my/file`
 
 As the database has not been kept up to date, you might find yourself inundated with database errors.
 To check only for formatting errors, which can usually be fixed in builder or the associated support module, use the `-f` option:
 
-`pipenv run builder_ioc_naming_report -f my_dir`
+`pipenv run builder-ioc-naming-report -f my_dir`
 
 which will only test against the naming convention.
 

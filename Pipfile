@@ -4,13 +4,6 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-black = "*"
-rope = "*"
-
-[packages]
-requests = "*"
-natsort = "*"
-pvnaming = {editable = true,path = "."}
 pytest = "*"
 pytest-cov = "*"
 flake8 = "*"
@@ -18,6 +11,8 @@ flake8-import-order = "*"
 black = "==19.3b0"
 pre-commit = "*"
 mypy = "*"
+pvnaming = {editable = true,path = "."}
 
-[pipenv]
-allow_prereleases = true
+[packages]
+requests = "*"
+natsort = "*"
