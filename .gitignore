@@ -73,3 +73,5 @@ VS Code files
 
 # mypy cache
 /.mypy_cache/
+
+/lightweight-venv
