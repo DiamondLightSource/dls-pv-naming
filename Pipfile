@@ -13,6 +13,7 @@ pre-commit = "*"
 mypy = "*"
 pvnaming = {editable = true,path = "."}
 rope = "*"
+mock = "*"
 
 [packages]
 requests = "*"
