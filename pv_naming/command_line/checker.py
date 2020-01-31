@@ -5,6 +5,7 @@ from typing import List
 from pv_naming.fetch_info import fetch_information, fetch_value_rdb
 from pv_naming.pv_database_check import pv_database_check, pv_database_report
 from pv_naming.pv_format_check import pv_format_check, pv_format_report
+from pv_naming.rdb_domain import RDB_API_ADDRESS
 from pv_naming.split import split_into_elements
 
 
@@ -32,21 +33,21 @@ def device_check(device_name: str) -> str:
         comments = [
             f"Well done! {device_name} matches the formatting convention AND it is in the database! 🎉🎉"
         ]
-        domainsearch = f"https://rdb.pri.diamond.ac.uk/php/epics/cs_epigetdomain.php?domainid={domain}"
+        domainsearch = f"{RDB_API_ADDRESS}/cs_epigetdomain.php?domainid={domain}"
         comments.append(
             f"Domain: {domain} - {fetch_value_rdb(domainsearch, 'domainname')}"
         )
         if subdomain is not None:
-            subdomainsearch = f"https://rdb.pri.diamond.ac.uk/php/epics/cs_epigetsubdomain.php?domainid={domain}&subdomainid={subdomain}"
+            subdomainsearch = f"{RDB_API_ADDRESS}/cs_epigetsubdomain.php?domainid={domain}&subdomainid={subdomain}"
             comments.append(
                 f"Subdomain: {subdomain} - {fetch_value_rdb(subdomainsearch, 'subdomainname')}"
             )
-        techsearch = f"https://rdb.pri.diamond.ac.uk/php/epics/cs_epigettecharea.php?techareaid={techarea}"
+        techsearch = f"{RDB_API_ADDRESS}/cs_epigettecharea.php?techareaid={techarea}"
         comments.append(
             f"Technical Area: {techarea} - {fetch_value_rdb(techsearch, 'techareaname')}"
         )
 
-        compsearch = f"https://rdb.pri.diamond.ac.uk/php/epics/cs_epigetcomponent.php?componentid={component}"
+        compsearch = f"{RDB_API_ADDRESS}/cs_epigetcomponent.php?componentid={component}"
         comments.append(
             f"Component: {component} - {fetch_value_rdb(compsearch, 'componentname')}"
         )

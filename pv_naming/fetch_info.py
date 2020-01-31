@@ -8,6 +8,8 @@ from typing import List, Optional
 
 import requests
 
+from pv_naming.rdb_domain import RDB_API_ADDRESS
+
 
 def fetch_from_rdb(request_address: str, key: str, value: str) -> Optional[dict]:
     """Get list of all the components"""
@@ -84,73 +86,21 @@ def fetch_information() -> dict:
     """Collect all useful information from the database"""
     return {
         "domain": fetch_from_rdb(
-            "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetdomain.php",
-            "domainid",
-            "domainname",
+            f"{RDB_API_ADDRESS}/cs_epigetdomain.php", "domainid", "domainname"
         ),
         "subdomain": fetch_from_rdb(
-            "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetsubdomain.php",
-            "subdomainid",
-            "subdomainname",
+            f"{RDB_API_ADDRESS}/cs_epigetsubdomain.php", "subdomainid", "subdomainname"
         ),
         "domain_pair": fetch_pairs(
-            "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetsubdomain.php",
-            "domainid",
-            "subdomainid",
+            f"{RDB_API_ADDRESS}/cs_epigetsubdomain.php", "domainid", "subdomainid"
         ),
         "subdomain_pair": fetch_pairs(
-            "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetsubdomain.php",
-            "subdomainid",
-            "domainid",
+            f"{RDB_API_ADDRESS}/cs_epigetsubdomain.php", "subdomainid", "domainid"
         ),
         "technical_area": fetch_from_rdb(
-            "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigettecharea.php",
-            "techareaid",
-            "techareaname",
+            f"{RDB_API_ADDRESS}/cs_epigettecharea.php", "techareaid", "techareaname"
         ),
         "component": fetch_all_from_rdb(
-            "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetcomponent.php",
-            "componentid",
-            "componentname",
+            f"{RDB_API_ADDRESS}/cs_epigetcomponent.php", "componentid", "componentname"
         ),
     }
-
-
-if __name__ == "__main__":
-    t = time.time()
-    domains = fetch_from_rdb(
-        "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetdomain.php",
-        "domainid",
-        "domainname",
-    )
-
-    subdomains = fetch_from_rdb(
-        "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetsubdomain.php",
-        "subdomainid",
-        "subdomainname",
-    )
-
-    domain_pairs = fetch_pairs(
-        "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetsubdomain.php",
-        "domainid",
-        "subdomainid",
-    )
-
-    subdomain_pairs = fetch_pairs(
-        "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetsubdomain.php",
-        "subdomainid",
-        "domainid",
-    )
-
-    techareas = fetch_from_rdb(
-        "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigettecharea.php",
-        "techareaid",
-        "techareaname",
-    )
-
-    comps = fetch_all_from_rdb(
-        "http://rdb.pri.diamond.ac.uk/php/epics/cs_epigetcomponent.php",
-        "componentid",
-        "componentname",
-    )
-    print(f"Took {time.time() - t}")
