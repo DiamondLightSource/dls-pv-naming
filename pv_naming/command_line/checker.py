@@ -2,7 +2,7 @@ import argparse
 import json
 from typing import List
 
-from pv_naming.fetch_info import fetch_information, fetch_value_rdb
+from pv_naming.fetch_from_rdb import fetch_all_information, fetch_value_rdb
 from pv_naming.pv_database_check import pv_database_check, pv_database_report
 from pv_naming.pv_format_check import pv_format_check, pv_format_report
 from pv_naming.rdb_domain import RDB_API_ADDRESS
@@ -18,7 +18,7 @@ def device_check(device_name: str) -> str:
     comments: List[str] = []
 
     # Collect all necessary information
-    database_dict = fetch_information()
+    database_dict = fetch_all_information()
 
     if pv_format_check(device_name) is False:
         comments = ["Device does not match format:", *pv_format_report(device_name)]

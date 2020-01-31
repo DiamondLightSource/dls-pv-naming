@@ -2,7 +2,7 @@ import logging
 import re
 from typing import List, Optional
 
-from pv_naming.fetch_info import fetch_information
+from pv_naming.fetch_from_rdb import fetch_all_information
 from pv_naming.split import split_into_elements
 
 # Empty version of database expected by pv_database_check

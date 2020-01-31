@@ -3,7 +3,7 @@ import logging
 import re
 from typing import List
 
-from pv_naming.fetch_info import fetch_information
+from pv_naming.fetch_from_rdb import fetch_all_information
 from pv_naming.pv_database_check import (
     empty_database,
     pv_database_check,
@@ -177,7 +177,7 @@ def record_file_report_many(
 
 if __name__ == "__main__":
 
-    database_info = fetch_information()
+    database_info = fetch_all_information()
 
     record_text_report(
         """record(ai, "BL6I-EA-IOC-01")
