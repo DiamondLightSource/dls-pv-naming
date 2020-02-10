@@ -1,13 +1,19 @@
 import logging
 import re
+from typing import List, Optional
 
-from typing import Optional
+
+# Split into sections based on either dashes or underscores
+# (to collect possible errors)
+def section_split(input: str) -> List[str]:
+    return re.split("[-_]", input)
 
 
 def split_into_elements(pv: str):
+    print(pv)
     try:
-        [domainGroup, technical_area, component, identifier] = re.split(
-            "[-_]", pv.split(":")[0]
+        [domainGroup, technical_area, component, identifier] = section_split(
+            pv.split(":")[0]
         )
     except ValueError:
         logging.error("Not enough values to unpack")
