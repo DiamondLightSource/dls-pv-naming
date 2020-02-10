@@ -12,6 +12,8 @@ black = "==19.3b0"
 pre-commit = "*"
 mypy = "*"
 pvnaming = {editable = true,path = "."}
+rope = "*"
+mock = "*"
 
 [packages]
 requests = "*"

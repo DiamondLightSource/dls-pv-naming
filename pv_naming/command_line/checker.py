@@ -2,13 +2,14 @@ import argparse
 import json
 from typing import List
 
-from pv_naming.fetch_info import fetch_information, fetch_value_rdb
+from pv_naming.fetch_from_rdb import fetch_all_information, fetch_value_rdb
 from pv_naming.pv_database_check import pv_database_check, pv_database_report
 from pv_naming.pv_format_check import pv_format_check, pv_format_report
+from pv_naming.rdb_domain import RDB_API_ADDRESS
 from pv_naming.split import split_into_elements
 
 
-def device_check(device_name: str) -> str:
+def device_check(device_name: str) -> dict:
     """Runs format and database check on device name and returns a JSON formatted string"""
     # Initialize result dictionary
     # device holds device name, valid holds whether the name passes all checks
@@ -17,7 +18,7 @@ def device_check(device_name: str) -> str:
     comments: List[str] = []
 
     # Collect all necessary information
-    database_dict = fetch_information()
+    database_dict = fetch_all_information()
 
     if pv_format_check(device_name) is False:
         comments = ["Device does not match format:", *pv_format_report(device_name)]
@@ -32,28 +33,28 @@ def device_check(device_name: str) -> str:
         comments = [
             f"Well done! {device_name} matches the formatting convention AND it is in the database! 🎉🎉"
         ]
-        domainsearch = f"https://rdb.pri.diamond.ac.uk/php/epics/cs_epigetdomain.php?domainid={domain}"
+        domainsearch = f"{RDB_API_ADDRESS}/cs_epigetdomain.php?domainid={domain}"
         comments.append(
             f"Domain: {domain} - {fetch_value_rdb(domainsearch, 'domainname')}"
         )
         if subdomain is not None:
-            subdomainsearch = f"https://rdb.pri.diamond.ac.uk/php/epics/cs_epigetsubdomain.php?domainid={domain}&subdomainid={subdomain}"
+            subdomainsearch = f"{RDB_API_ADDRESS}/cs_epigetsubdomain.php?domainid={domain}&subdomainid={subdomain}"
             comments.append(
                 f"Subdomain: {subdomain} - {fetch_value_rdb(subdomainsearch, 'subdomainname')}"
             )
-        techsearch = f"https://rdb.pri.diamond.ac.uk/php/epics/cs_epigettecharea.php?techareaid={techarea}"
+        techsearch = f"{RDB_API_ADDRESS}/cs_epigettecharea.php?techareaid={techarea}"
         comments.append(
             f"Technical Area: {techarea} - {fetch_value_rdb(techsearch, 'techareaname')}"
         )
 
-        compsearch = f"https://rdb.pri.diamond.ac.uk/php/epics/cs_epigetcomponent.php?componentid={component}"
+        compsearch = f"{RDB_API_ADDRESS}/cs_epigetcomponent.php?componentid={component}"
         comments.append(
             f"Component: {component} - {fetch_value_rdb(compsearch, 'componentname')}"
         )
 
     result["comments"] = comments
 
-    return json.dumps(result)
+    return result
 
 
 def command_line_check():
@@ -70,7 +71,7 @@ def command_line_check():
     # Get the device
     device = args.device
 
-    result = json.loads(device_check(device))
+    result = device_check(device)
 
     for line in result["comments"]:
         print(line)

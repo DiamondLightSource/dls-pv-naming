@@ -3,7 +3,7 @@ import logging
 import re
 from typing import List
 
-from pv_naming.fetch_info import fetch_information
+from pv_naming.fetch_from_rdb import fetch_all_information
 from pv_naming.pv_database_check import (
     empty_database,
     pv_database_check,
@@ -11,7 +11,16 @@ from pv_naming.pv_database_check import (
 )
 from pv_naming.pv_format_check import get_device_name, pv_format_check, pv_format_report
 
-record_regex = '(?<=^record)(?:.*)(?<=")(.*)"'
+"""Regex for getting what is in between speech marks following the record
+keyword at the start of a line
+i.e record(ai, "MYPV") -> 'MYPV'
+but OUTP("OTHERPV") -> None
+
+Not defined as a verbose regex due to its use in a multiline check but not as a
+multiline regex. Could not get this to work putting the flag in the regex
+definition.
+"""
+RECORD_REGEX = '(?<=^record)(?:.*)(?<=")(.*)"'
 
 
 def record_text_report(
@@ -131,7 +140,7 @@ def record_text_report(
 
 def get_record_pvs(record_text: str) -> List[str]:
     """Read record_file and return a list of all PVS which match a more general PV format"""
-    return [pv for pv in re.findall(record_regex, record_text, flags=re.MULTILINE)]
+    return [pv for pv in re.findall(RECORD_REGEX, record_text, flags=re.MULTILINE)]
 
 
 def record_file_report(
@@ -173,50 +182,3 @@ def record_file_report_many(
                         ][error_type][device]["occurences"][:3] + ["..."]
 
     return report
-
-
-if __name__ == "__main__":
-
-    database_info = fetch_information()
-
-    record_text_report(
-        """record(ai, "BL6I-EA-IOC-01")
-record(ai, "ME16I-EA-IOC-01"
-record(ai, "BL02I-EA-IOC-04SR_5_Status")
-record(ai, "BL02I-EA-IOC-04SR_deadIfZero")
-record(ai, "BL02I-EA-IOC-04:CORRECT:FORMAT")
-record(ai, "BL14I-VA-VLVCC-03B")
-record(ai, "BL14I-VA-VLVCC-03B:Some:Other:Things")
-record(ai, "BL14I-VA-VLCCC-03:ALSO:CORRECT")
-record(ai, "BL16I-EA-K65-01Int")
-record(ai, "BL16I-EA-K65-01KeyDispNext")
-record(ai, "BL16I-EA-K65-01KeyLeftArrow")
-record(ai, "BL02I-EA-IOC-04SR_7_Name")
-record(ai, "BL02I-EA-IOC-04::SR_7_Name")  """,
-        database_info,
-    )
-
-    print(
-        record_file_report(
-            "/dls_sw/prod/R3.14.12.7/ioc/BL18B/BL18B-EA-IOC-14/2-0/db/BL18B-EA-IOC-14_expanded.db",
-            database_info,
-        )
-    )
-
-    print(
-        record_file_report(
-            "/dls_sw/prod/R3.14.12.3/ioc/BL14I/BL14I-VA-IOC-03/2-0/db/BL14I-VA-IOC-03_expanded.db",
-            database_info,
-        )
-    )
-
-    # print(
-    #     record_file_report_many(
-    #         [
-    #             "/dls_sw/prod/R3.14.12.7/ioc/BL18B/BL18B-EA-IOC-14/2-0/db/BL18B-EA-IOC-14_expanded.db",
-    #             "/dls_sw/prod/R3.14.12.7/ioc/BL18B/BL18B-EA-IOC-14/2-0/db/BL18B-EA-IOC-14_expanded.db",
-    #             "/dls_sw/prod/R3.14.12.7/ioc/BL18B/BL18B-EA-IOC-14/2-0/db/BL18B-EA-IOC-14_expanded.db",
-    #         ],
-    #         database_info,
-    #     )
-    # )

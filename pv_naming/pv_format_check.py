@@ -2,13 +2,30 @@ import logging
 import re
 from typing import List
 
+from pv_naming.split import section_split
+
+NAMING_CONVENTION_REGEX = re.compile(
+    r"""
+    [A-Z]{2} # Two upper case characters required for domain
+    (?:[0-9][A-Z0-9][A-Z]){0,1} # Possibly three characters required for subdomain
+    # number, alphanumeric, uppercase letter in non-capturing group
+    -
+    [A-Z]{2} # Two upper case letters required for technical area
+    -
+    [A-Z][A-Z0-9]{0,4} # Component can be made up of up two five characters
+    # The first must be an upper case number, the rest may be alphanumeric
+    -
+    [0-9]{2} # Two numbers required for identifier
+    (?::[a-zA-Z0-9_.-]+)*$ # Colon indicates start of subdevice name which may be made up
+    # of any number of groups comprising alphanumerics, full stops, dashes and underlines
+    """,
+    re.X,
+)
+
 
 def pv_format_check(word: str) -> bool:
     """Check the PV against the format of a PV"""
-    if re.match(
-        "[A-Z]{2}(?:[0-9][A-Z0-9][A-Z]){0,1}-[A-Z]{2}-[A-Z][A-Z0-9]{0,4}-[0-9]{2}(?::[a-zA-Z0-9_.-]+)*$",
-        word,
-    ):
+    if re.match(NAMING_CONVENTION_REGEX, word):
         return True
     else:
         return False
@@ -26,11 +43,11 @@ def get_device_name(pv: str) -> str:
         # Include the colons to separate from similar device names
         # Can't type check this at - see https://github.com/python/mypy/issues/7503
         device = re.match("((.*):{2,})", pv).group(0)  # type: ignore
-    elif len(re.split("[-_]", device)) >= 4:
+    elif len(section_split(device)) >= 4:
         # Get the first group
         if ":" in pv:
             device = pv.split(":")[0]
-        elements = re.split("[-_]", device)
+        elements = section_split(device)
         # Just the identifier
         initial_element = elements[3]
         shortened_element = elements[3][:2]
@@ -52,9 +69,7 @@ def pv_format_report(pv: str) -> List[str]:
 
     # Get the device name
     if (
-        len(re.split("[-_]", pv)) > 4
-        and ":" not in pv
-        and len(re.split("[-_]", pv)[3]) > 2
+        len(section_split(pv)) > 4 and ":" not in pv and len(section_split(pv)[3]) > 2
     ) or (get_device_name(pv) != pv.split(":")[0]):
         # Don't add an unnecessary error here
         # If the report has already added an error based on 2 colons, it doesn't need another
@@ -77,15 +92,15 @@ def pv_format_report(pv: str) -> List[str]:
         errors.append("PV must not contain underscores in device name")
 
     # Check there are enough elements to test
-    if (len(re.split("[-_]", device)) != 4) or not all(
-        [element != "" for element in re.split("[-_]", device)]
+    if (len(section_split(device)) != 4) or not all(
+        [element != "" for element in section_split(device)]
     ):
         errors.append(
             "Device name must contain 4 elements separated by hyphens: Domain-TechnicalArea-Component-Identifier"
         )
     else:
         # Detailed inspection of device name elements
-        [domain, technical_area, component, identifier] = re.split("[-_]", device)
+        [domain, technical_area, component, identifier] = section_split(device)
         logging.debug(f"Domain: {domain}")
         if not re.match("^[A-Z]{2}", domain):
             errors.append(

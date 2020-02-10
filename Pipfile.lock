@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "615bcfcba64957702c4f07d4cdfd7f6e002badea32a6435666b109e8f7a42465"
+            "sha256": "c1711131a800e05b41168f74440401bbf30dc7151923bcd85bd0377760b65100"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -162,6 +162,13 @@
             ],
             "version": "==0.6.1"
         },
+        "mock": {
+            "hashes": [
+                "sha256:d157e52d4e5b938c550f39eb2fd15610db062441a9c2747d3dbfa9298211d0f8"
+            ],
+            "index": "pypi",
+            "version": "==3.0.5"
+        },
         "more-itertools": {
             "hashes": [
                 "sha256:3ad685ff8512bf6dc5a8b82ebf73543999b657eded8c11803d9ba6b648986f4d"
@@ -269,6 +276,15 @@
             ],
             "index": "pypi",
             "version": "==2.22.0"
+        },
+        "rope": {
+            "hashes": [
+                "sha256:52423a7eebb5306a6d63bdc91a7c657db51ac9babfb8341c9a1440831ecf3203",
+                "sha256:ae1fa2fd56f64f4cc9be46493ce54bed0dd12dee03980c61a4393d89d84029ad",
+                "sha256:d2830142c2e046f5fc26a022fe680675b6f48f81c7fc1f03a950706e746e9dfe"
+            ],
+            "index": "pypi",
+            "version": "==0.16.0"
         },
         "six": {
             "hashes": [
