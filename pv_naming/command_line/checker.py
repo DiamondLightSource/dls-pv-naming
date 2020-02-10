@@ -9,7 +9,7 @@ from pv_naming.rdb_domain import RDB_API_ADDRESS
 from pv_naming.split import split_into_elements
 
 
-def device_check(device_name: str) -> str:
+def device_check(device_name: str) -> dict:
     """Runs format and database check on device name and returns a JSON formatted string"""
     # Initialize result dictionary
     # device holds device name, valid holds whether the name passes all checks
@@ -54,7 +54,7 @@ def device_check(device_name: str) -> str:
 
     result["comments"] = comments
 
-    return json.dumps(result)
+    return result
 
 
 def command_line_check():
@@ -71,7 +71,7 @@ def command_line_check():
     # Get the device
     device = args.device
 
-    result = json.loads(device_check(device))
+    result = device_check(device)
 
     for line in result["comments"]:
         print(line)
