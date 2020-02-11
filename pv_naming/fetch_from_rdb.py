@@ -67,7 +67,7 @@ def fetch_pairs(request_address: str, key: str, value: str) -> Optional[dict]:
     data = resp.json()
     if "Error" not in data:
         first_key = list(data[0].keys())[0]
-        # Generate list of matching balues from key to value
+        # Generate list of matching values from key to value
         # return {key: [value, value, value], ...}
         pairs: dict = {}
         for element in data[0][first_key]:
