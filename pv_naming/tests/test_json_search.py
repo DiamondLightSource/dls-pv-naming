@@ -54,3 +54,10 @@ def test_error_string_produced_on_none_in_database(mocked_fetch_rdb):
     result = json_search_by_name("term", COMPONENT)
     assert isinstance(result, str)
     assert "term" in result
+
+
+@patch("pv_naming.command_line.json_search.fetch_from_rdb")
+def test_returns_error_string_if_bad_section_type_given(mocked_fetch_rdb):
+    result = json_search_by_name("term", -1)
+    assert isinstance(result, str)
+    assert "term" in result
