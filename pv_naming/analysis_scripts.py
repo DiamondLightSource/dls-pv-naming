@@ -4,6 +4,7 @@
 import json
 import logging
 from pathlib import Path
+from typing import List
 
 from pv_naming.analyse_file import record_file_report_many
 from pv_naming.fetch_from_rdb import fetch_all_information
@@ -40,16 +41,17 @@ def report_builder_iocs(
     return reports
 
 
-def report_db(filename: str, verbose: bool, format_only: bool = False) -> dict:
-    try:
-        assert Path(filename).is_file()
-    except AssertionError:
-        print(f"Expected path to a valid .db file, got {filename}")
-        raise ValueError("Please provide the path to a valid .db file")
+def report_dbs(filenames: List[str], verbose: bool, format_only: bool = False) -> dict:
+    for f in filenames:
+        try:
+            assert Path(f).is_file()
+        except AssertionError:
+            print(f"Expected path to a valid .db file, got {f}")
+            raise ValueError("Please provide the path to a valid .db file")
 
     database_info = fetch_all_information()
 
-    reports = record_file_report_many([filename], database_info, verbose, format_only)
+    reports = record_file_report_many(filenames, database_info, verbose, format_only)
 
     return reports
 

@@ -2,7 +2,7 @@ import argparse
 import json
 import logging
 
-from pv_naming.analysis_scripts import report_builder_iocs, report_db
+from pv_naming.analysis_scripts import report_builder_iocs, report_dbs
 
 
 def command_line_file_report():
@@ -10,11 +10,12 @@ def command_line_file_report():
     logging.basicConfig(level=logging.INFO)
 
     argument_parser = argparse.ArgumentParser(
-        description="Produces a naming report for a database file."
+        description="Produces a naming report for database files. Can analyse many at once. Point directly to *.db files you wish to analyse.",
+        epilog="file-report mydb1.db mydb2.db mydb3.db",
     )
 
     argument_parser.add_argument(
-        "database", default=".", help="the expanded *.db file to analyse"
+        "databases", default=".", help="list of *.db file to analyse", nargs="+"
     )
 
     argument_parser.add_argument(
@@ -40,7 +41,7 @@ def command_line_file_report():
 
     args = argument_parser.parse_args()
 
-    report = report_db(args.database, args.verbose, args.format_only)
+    report = report_dbs(args.database, args.verbose, args.format_only)
 
     if args.output:
         with open(args.output, "w") as fp:
