@@ -3,6 +3,7 @@
 
 import json
 import logging
+from pathlib import Path
 
 from pv_naming.analyse_file import record_file_report_many
 from pv_naming.fetch_from_rdb import fetch_all_information
@@ -27,7 +28,7 @@ def report_latest_ioc_dbs():
 
 def report_builder_iocs(
     builder_directory: str, verbose: bool = False, format_only: bool = False
-):
+) -> dict:
     """Create a report from all the files in the specified builder directory"""
     database_info = fetch_all_information()
     builder_ioc_dbs = find_builder_ioc_filenames(builder_directory)
@@ -35,6 +36,20 @@ def report_builder_iocs(
     reports = record_file_report_many(
         builder_ioc_dbs, database_info, verbose, format_only
     )
+
+    return reports
+
+
+def report_db(filename: str, verbose: bool, format_only: bool = False) -> dict:
+    try:
+        assert Path(filename).is_file()
+    except AssertionError:
+        print(f"Expected path to a valid .db file, got {filename}")
+        raise ValueError("Please provide the path to a valid .db file")
+
+    database_info = fetch_all_information()
+
+    reports = record_file_report_many([filename], database_info, verbose, format_only)
 
     return reports
 

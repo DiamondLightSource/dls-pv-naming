@@ -10,7 +10,6 @@ def section_split(input: str) -> List[str]:
 
 
 def split_into_elements(pv: str):
-    print(pv)
     try:
         [domainGroup, technical_area, component, identifier] = section_split(
             pv.split(":")[0]
