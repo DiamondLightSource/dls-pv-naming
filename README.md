@@ -18,7 +18,7 @@ When you are creating a database or an electical drawing, you may wish to confir
 
 To perform this check, use:
 
-`dls-naming-check MY-DEVICE-NAME`
+`dls-pv-name-check MY-DEVICE-NAME`
 
 where `MY-DEVICE-NAME` is the name you wish to verify.
 
@@ -26,24 +26,24 @@ If the name passes all the checks you will receive a lovely message and if not t
 
 ## Analyse EPICS Database
 
-To test an EPICS database against the Diamond naming convention and database, use `dls-naming-report`. This tool can run analysis on one or many \*.db files at once, and will produce a JSON styled report which should be easy to understand.
+To test an EPICS database against the Diamond naming convention and database, use `dls-pv-name-report`. This tool can run analysis on one or many \*.db files at once, and will produce a JSON styled report which should be easy to understand.
 
 To analyse a database file:
 
-`dls-naming-report my_db.db`
+`dls-pv-name-report my_db.db`
 
 To analyse multiple database files at the same time:
 
-`dls-naming-report my_db.db my_other_db.db`
+`dls-pv-name-report my_db.db my_other_db.db`
 
 To pipe the output to a file where you can view it later:
 
-`dls-naming-report my_db.db --output /path/to/output.txt`
+`dls-pv-name-report my_db.db --output /path/to/output.txt`
 
 As the database has not been kept up to date, you might find yourself inundated with database errors.
 To check only for formatting errors, which can usually be fixed in builder or the associated support module, use the `-f` option:
 
-`dls-naming-report -f my_db.db`
+`dls-pv-name-report -f my_db.db`
 
 which will only test against the naming convention.
 
@@ -51,7 +51,7 @@ which will only test against the naming convention.
 
 To test whether your builder IOC is creating PV names which match the Diamond convention, build the IOCs and then use the `-b` option to specify a builder directory:
 
-`dls-naming-report -b my_dir`
+`dls-pv-name-report -b my_dir`
 
 where `my_dir` is the absolute address of the top level builder directory you are interested in.
 This will investigate every IOC in _/iocs_ and every database in the _/db_ directory of those IOCs.
@@ -59,24 +59,24 @@ This will investigate every IOC in _/iocs_ and every database in the _/db_ direc
 By default, this will print the report to your terminal.
 If you would like to write this to a file, use:
 
-`dls-naming-report -b my_dir --output /path/to/output.txt`
+`dls-pv-name-report -b my_dir --output /path/to/output.txt`
 
 As the database has not been kept up to date, you might find yourself inundated with database errors.
 To check only for formatting errors, which can usually be fixed in builder or the associated support module, use the `-f` option:
 
-`dls-naming-report -b -f my_dir`
+`dls-pv-name-report -b -f my_dir`
 
 which will only test against the naming convention.
 
 ## Search the Database
 
-To find which terms have already been included in the database, use `dls-naming-search`.
+To find which terms have already been included in the database, use `dls-pv-name-search`.
 This will search the description fields of the database to find matches to your search term.
 
 By default, it will search for components, as this is the most numerous section:
 
 ```bash
-$ dls-naming-search temp
+$ dls-pv-name-search temp
 The following components were found for "temp":
 CRWAT: RF Circulator Temperature Compensation Unit
 DIODE: Low temp diode
@@ -92,10 +92,10 @@ VTEMP: Vessel Temperature
 You can also search for technical areas or domains with the `-t` and `-d` options:
 
 ```bash
-$ dls-naming-search -t experiment
+$ dls-pv-name-search -t experiment
 The following technical areas were found for "experiment":
 EA: Experimental Apparatus
-$ dls-naming-search -d experiment
+$ dls-pv-name-search -d experiment
 The following domains were found for "experiment":
 BL: Experimental Area
 TE: Test Experimental Area (Test Beamlines)
@@ -105,7 +105,7 @@ The seach is relatively basic so you would be best served by using short, single
 You could then narrow down this search by piping to grep if required:
 
 ```bash
-$ dls-naming-search pump | grep -i scroll
+$ dls-pv-name-search pump | grep -i scroll
 SCROL: Scroll Vacuum Pump
 ```
 

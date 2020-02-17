@@ -57,7 +57,7 @@ def cli_json_search():
         description="""This tool provides a command line interface to the database API, to help you search for domains, technical areas and component names which are found in the database.
 Works best with short search terms with no spaces.
 If no arguments are applied it will search for components.""",
-        epilog="Example to search for pump-related components: dls-naming-search pump",
+        epilog="Example to search for pump-related components: dls-pv-name-search pump",
     )
 
     parser.add_argument("search_term", type=str, help="the term to search for")
