@@ -32,7 +32,12 @@ def report_builder_iocs(
 ) -> dict:
     """Create a report from all the files in the specified builder directory"""
     database_info = fetch_all_information()
-    builder_ioc_dbs = find_builder_ioc_filenames(builder_directory)
+    try:
+        builder_ioc_dbs = find_builder_ioc_filenames(builder_directory)
+    except FileNotFoundError:
+        raise ValueError(
+            f'Please provide the path to a valid builder directory - got "{builder_directory}"'
+        )
 
     reports = record_file_report_many(
         builder_ioc_dbs, database_info, verbose, format_only
@@ -46,8 +51,7 @@ def report_dbs(filenames: List[str], verbose: bool, format_only: bool = False) -
         try:
             assert Path(f).is_file()
         except AssertionError:
-            print(f"Expected path to a valid .db file, got {f}")
-            raise ValueError("Please provide the path to a valid .db file")
+            raise ValueError(f'Please provide the path to a valid .db file - got "{f}"')
 
     database_info = fetch_all_information()
 
