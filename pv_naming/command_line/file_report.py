@@ -13,8 +13,8 @@ def command_line_file_report():
         description="""Produces a naming report for database files. Can analyse many at once.
 Point directly to *.db files you wish to analyse.
 Or to the <top> of a builder directory with build IOCs.""",
-        epilog="""file-report mydb1.db mydb2.db mydb3.db
-file-report -b /file/to/builder/top""",
+        epilog="""dls-naming-report-report mydb1.db mydb2.db mydb3.db
+dls-naming-report-report -b /file/to/builder/top""",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
