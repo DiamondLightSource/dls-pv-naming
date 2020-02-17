@@ -50,15 +50,15 @@ def find_builder_ioc_filenames(builder_directory: str) -> List[str]:
     expanded_dbs_list = [
         glob.glob(str(directory) + "/db/*.db") for directory in ioc_dirs
     ]
-    expanded_db_files = [
-        sorted(db_list, reverse=True)[0] for db_list in expanded_dbs_list if db_list
-    ]
+    # Expand sublists - necessary for catching *.db and *_expanded_db for instance
+    expanded_db_files = [f for dbs in expanded_dbs_list for f in dbs]
     logging.info(f"Found {len(expanded_db_files)} database files for analysis")
     logging.debug(
         f"Found {len(set(expanded_db_files))} unique database files for analysis"
     )
 
-    return expanded_db_files
+    # Return a list of unique values
+    return list(set(expanded_db_files))
 
 
 if __name__ == "__main__":
