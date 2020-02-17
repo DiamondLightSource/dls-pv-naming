@@ -11,7 +11,8 @@ def command_line_file_report():
 
     argument_parser = argparse.ArgumentParser(
         description="""Produces a naming report for database files. Can analyse many at once.
-Point directly to *.db files you wish to analyse.""",
+Point directly to *.db files you wish to analyse.
+Or to the <top> of a builder directory with build IOCs.""",
         epilog="""file-report mydb1.db mydb2.db mydb3.db
 file-report -b /file/to/builder/top""",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -19,7 +20,6 @@ file-report -b /file/to/builder/top""",
 
     argument_parser.add_argument(
         "databases",
-        default=".",
         help="list of *.db files to analyse, or single builder directory to analyse",
         nargs="+",
     )
