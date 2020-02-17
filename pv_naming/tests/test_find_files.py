@@ -33,7 +33,10 @@ def test_finds_dbs_from_two_iocs(tmpdir):
     db2_dir.mkdir()
     mydb2 = db2_dir / "mydb2.db"
     mydb2.write("")
-    assert find_builder_ioc_filenames(tmpdir) == [mydb1, mydb2]
+    found_files = find_builder_ioc_filenames(tmpdir)
+    assert len(found_files) == 2
+    assert mydb1 in found_files
+    assert mydb2 in found_files
 
 
 def test_finds_all_dbs_in_one_iocs(tmpdir):
@@ -47,5 +50,7 @@ def test_finds_all_dbs_in_one_iocs(tmpdir):
     mydb1.write("")
     mydb2 = db_dir / "mydb2.db"
     mydb2.write("")
-    print(find_builder_ioc_filenames(tmpdir))
-    assert find_builder_ioc_filenames(tmpdir) == [mydb1, mydb2]
+    found_files = find_builder_ioc_filenames(tmpdir)
+    assert len(found_files) == 2
+    assert mydb1 in found_files
+    assert mydb2 in found_files
