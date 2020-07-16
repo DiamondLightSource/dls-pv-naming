@@ -125,9 +125,9 @@ The reports can be easily viewed in the browser.
 
 The CI Templates for `pv-naming` are located [in the ci_templates repo](https://gitlab.diamond.ac.uk/controls/reports/ci_templates/-/blob/master/pv_name_report.yml).
 
-An example of use can be found on the `ci-dev` branch of [**BL10J-BUILDER**](https://gitlab.diamond.ac.uk/controls/support/bl10j-builder/-/tree/ci-dev).
+An example of use can be found on the `ci-dev` branch of [BL10J-BUILDER](https://gitlab.diamond.ac.uk/controls/support/bl10j-builder/-/tree/ci-dev).
+See the [`.gitlab-ci.yml` file here](https://gitlab.diamond.ac.uk/controls/support/bl10j-builder/-/blob/ci-dev/.gitlab-ci.yml).
 You can view the failing pv name report [here](https://gitlab.diamond.ac.uk/controls/support/bl10j-builder/-/jobs/17717) - otherwise click on `CI/CD -> Pipelines` and click a failing pipeline, marked with a red cross on the `ci-dev` branch.
-
 
 # Development
 
