@@ -117,6 +117,18 @@ If you would like to get a more general feel for how consistent PV naming is in 
 
 This will produce a file at `/scratch/ioc_reports.json` which provides the output of databases found in the latest version of every ioc in `/dls_sw/prod/R3.14.12.3/ioc` and `/dls_sw/prod/R3.14.12.7/ioc`.
 
+# Gitlab CI
+
+It is now possible to run some of the above commands as part of the Gitlab CI pipeline process.
+Whenever code is pushed to the Gitlab repo, the PV checks will run and provide reports if failures occur.
+The reports can be easily viewed in the browser.
+
+The CI Templates for `pv-naming` are located [in the ci_templates repo](https://gitlab.diamond.ac.uk/controls/reports/ci_templates/-/blob/master/pv_name_report.yml).
+
+An example of use can be found on the `ci-dev` branch of [BL10J-BUILDER](https://gitlab.diamond.ac.uk/controls/support/bl10j-builder/-/tree/ci-dev).
+See the [`.gitlab-ci.yml` file here](https://gitlab.diamond.ac.uk/controls/support/bl10j-builder/-/blob/ci-dev/.gitlab-ci.yml).
+You can view the failing pv name report [here](https://gitlab.diamond.ac.uk/controls/support/bl10j-builder/-/jobs/17717) - otherwise click on `CI/CD -> Pipelines` and click a failing pipeline, marked with a red cross on the `ci-dev` branch.
+
 # Development
 
 While developing, please use the pre-commit hooks provided.
