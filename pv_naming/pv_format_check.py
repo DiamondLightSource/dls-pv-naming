@@ -7,13 +7,13 @@ from pv_naming.split import section_split
 NAMING_CONVENTION_REGEX = re.compile(
     r"""
     [A-Z]{2} # Two upper case characters required for domain
-    (?:[0-9][A-Z0-9][A-Z]){0,1} # Possibly three characters required for subdomain
-    # number, alphanumeric, uppercase letter in non-capturing group
+    (?:[0-9][0-9][A-Z][A-Z]{0,1}){0,1} # Possibly four characters required for subdomain
+    # number, number, uppercase letter, uppercase letter in non-capturing group
     -
     [A-Z]{2} # Two upper case letters required for technical area
     -
-    [A-Z][A-Z0-9]{0,4} # Component can be made up of up two five characters
-    # The first must be an upper case number, the rest may be alphanumeric
+    [A-Z][A-Z0-9]{0,5} # Component can be made up of up to six characters
+    # The first must be an upper case letter, the rest may be alphanumeric
     -
     [0-9]{2} # Two numbers required for identifier
     (?::[a-zA-Z0-9_.-]+)*$ # Colon indicates start of subdevice name which may be made up
