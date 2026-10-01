@@ -22,6 +22,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+**/_version.py
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -41,7 +42,9 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
-*,cover
+cov.xml
+.pytest_cache/
+.mypy_cache/
 
 # Translations
 *.mo
@@ -52,26 +55,17 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+docs/_api
 
 # PyBuilder
 target/
 
-# PyCharm and Eclipse project files
-/.idea/
-/.project
-/.cproject
-/.settings/
-/.pydevproject
+# likely venv names
+.venv*
+venv*
 
-VS Code files
-/.vscode/
+# further build artifacts
+lockfiles/
 
-# DLS build dir and virtual environment
-/prefix/
-/venv/
-/installed.files
-
-# mypy cache
-/.mypy_cache/
-
-/lightweight-venv
+# ruff cache
+.ruff_cache/

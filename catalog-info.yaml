@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dls-pv-naming
+  title: dls-pv-naming
+  description: Tools to validate EPICS PV names according to DLS rules
+spec:
+  type: library
+  lifecycle: production
+  owner: group:default/accelerator-controls

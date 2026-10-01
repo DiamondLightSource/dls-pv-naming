@@ -1,0 +1,19 @@
+# Changes here will be overwritten by Copier
+_commit: 5.4.0
+_src_path: https://github.com/DiamondLightSource/python-copier-template.git
+author_email: alex.wells@diamond.ac.uk
+author_name: Alexander Wells
+component_lifecycle: production
+component_owner: group:default/accelerator-controls
+component_type: library
+description: Tools to validate EPICS PV names according to DLS rules
+distribution_name: dls-pv-naming
+docker: true
+docs_type: README
+git_platform: github.com
+github_org: DiamondLightSource
+package_name: dls_pv_naming
+pypi: true
+repo_name: dls-pv-naming
+strict_typing: true
+type_checker: pyright
