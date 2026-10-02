@@ -1,16 +1,18 @@
-[![pipeline status](https://gitlab.diamond.ac.uk/controls/python3/pv-naming/badges/master/pipeline.svg)](https://gitlab.diamond.ac.uk/controls/python3/pv-naming/commits/master)
-[![coverage report](https://gitlab.diamond.ac.uk/controls/python3/pv-naming/badges/master/coverage.svg)](https://gitlab.diamond.ac.uk/controls/python3/pv-naming/commits/master)
-[![Python 3.7](https://upload.wikimedia.org/wikipedia/commons/f/fc/Blue_Python_3.7_Shield_Badge.svg)](https://upload.wikimedia.org/wikipedia/commons/f/fc/Blue_Python_3.7_Shield_Badge.svg)
+[![CI](https://github.com/DiamondLightSource/dls-pv-naming/actions/workflows/ci.yml/badge.svg)](https://github.com/DiamondLightSource/dls-pv-naming/actions/workflows/ci.yml)
+[![Coverage](https://codecov.io/gh/DiamondLightSource/dls-pv-naming/branch/main/graph/badge.svg)](https://codecov.io/gh/DiamondLightSource/dls-pv-naming)
+[![PyPI](https://img.shields.io/pypi/v/dls-pv-naming.svg)](https://pypi.org/project/dls-pv-naming)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
-# PV Naming
+# dls_pv_naming
 
 Set of tools to help engineers at **Diamond Light Source** to name PVs consistently.
 
-## Install
-
-Hopefully you are at Diamond Light Source and this should just work:
-
-`pipenv install`
+|   What   |                             Where                              |
+| :------: | :------------------------------------------------------------: |
+|  Source  |     <https://github.com/DiamondLightSource/dls-pv-naming>      |
+|   PyPI   |                  `pip install dls-pv-naming`                   |
+|  Docker  |  `docker run ghcr.io/diamondlightsource/dls-pv-naming:latest`  |
+| Releases | <https://github.com/DiamondLightSource/dls-pv-naming/releases> |
 
 ## Test a PV/Device Name
 
@@ -113,35 +115,6 @@ SCROL: Scroll Vacuum Pump
 
 If you would like to get a more general feel for how consistent PV naming is in our production databases, use:
 
-`pipenv run python pv_naming/analysis_scripts.py`
+`python pv_naming/analysis_scripts.py`
 
 This will produce a file at `/scratch/ioc_reports.json` which provides the output of databases found in the latest version of every ioc in `/dls_sw/prod/R3.14.12.3/ioc` and `/dls_sw/prod/R3.14.12.7/ioc`.
-
-# Gitlab CI
-
-It is now possible to run some of the above commands as part of the Gitlab CI pipeline process.
-Whenever code is pushed to the Gitlab repo, the PV checks will run and provide reports if failures occur.
-The reports can be easily viewed in the browser.
-
-The CI Templates for `pv-naming` are located [in the ci_templates repo](https://gitlab.diamond.ac.uk/controls/reports/ci_templates/-/blob/master/pv_name_report.yml).
-
-An example of use can be found on the `ci-dev` branch of [BL10J-BUILDER](https://gitlab.diamond.ac.uk/controls/support/bl10j-builder/-/tree/ci-dev).
-See the [`.gitlab-ci.yml` file here](https://gitlab.diamond.ac.uk/controls/support/bl10j-builder/-/blob/ci-dev/.gitlab-ci.yml).
-You can view the failing pv name report [here](https://gitlab.diamond.ac.uk/controls/support/bl10j-builder/-/jobs/17717) - otherwise click on `CI/CD -> Pipelines` and click a failing pipeline, marked with a red cross on the `ci-dev` branch.
-
-# Development
-
-While developing, please use the pre-commit hooks provided.
-They can be easily activated when installing the package:
-
-```bash
-# Installs the package
-pipenv install
-# Installs the pre-commit hooks
-pipenv run pre-commit install
-```
-
-These hooks are run by the continuous integration job on Gitlab so will otherwise fail.
-They help to keep the code neat, tidy and correct.
-
-Thanks!
