@@ -2,7 +2,7 @@ import argparse
 import json
 import logging
 
-from pv_naming.analysis_scripts import report_builder_iocs, report_dbs
+from dls_pv_naming.analysis_scripts import report_builder_iocs, report_dbs
 
 
 def command_line_file_report():
@@ -10,8 +10,8 @@ def command_line_file_report():
     logging.basicConfig(level=logging.INFO)
 
     argument_parser = argparse.ArgumentParser(
-        description="""Produces a naming report for database files. Can analyse many at once.
-Point directly to *.db files you wish to analyse.
+        description="""Produces a naming report for database files. Can analyse many \
+at once. Point directly to *.db files you wish to analyse.
 Or to the <top> of a builder directory with build IOCs.""",
         epilog="""dls-pv-name-report-report mydb1.db mydb2.db mydb3.db
 dls-pv-name-report-report -b /file/to/builder/top""",
@@ -28,7 +28,8 @@ dls-pv-name-report-report -b /file/to/builder/top""",
         "-b",
         "--builder",
         action="store_true",
-        help="specify that you are pointing to the <top> of a single builder directory and wish to view a report of built IOCs",
+        help="specify that you are pointing to the <top> of a single builder directory "
+        "and wish to view a report of built IOCs",
     )
 
     argument_parser.add_argument(
@@ -49,7 +50,8 @@ dls-pv-name-report-report -b /file/to/builder/top""",
         "--format-only",
         action="store_true",
         default=False,
-        help="add this option if you do not want to include checks agains the database in the report",
+        help="add this option if you do not want to include checks agains the database "
+        "in the report",
     )
 
     args = argument_parser.parse_args()

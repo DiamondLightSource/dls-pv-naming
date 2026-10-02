@@ -2,8 +2,8 @@
 
 from argparse import ArgumentParser
 
-from pv_naming.fetch_from_rdb import fetch_from_rdb
-from pv_naming.rdb_domain import RDB_API_ADDRESS
+from dls_pv_naming.fetch_from_rdb import fetch_from_rdb
+from dls_pv_naming.rdb_domain import RDB_API_ADDRESS
 
 # Constants to dictate which section to search
 DOMAIN = 0
@@ -52,11 +52,16 @@ Please try a single short term."""
         return result_string
 
 
+DESCRIPTION = """This tool provides a command line interface to the database API, \
+to help you search for domains, technical areas and component names which are found in \
+the database.
+Works best with short search terms with no spaces.
+If no arguments are applied it will search for components."""
+
+
 def cli_json_search():
     parser = ArgumentParser(
-        description="""This tool provides a command line interface to the database API, to help you search for domains, technical areas and component names which are found in the database.
-Works best with short search terms with no spaces.
-If no arguments are applied it will search for components.""",
+        description=DESCRIPTION,
         epilog="Example to search for pump-related components: dls-pv-name-search pump",
     )
 

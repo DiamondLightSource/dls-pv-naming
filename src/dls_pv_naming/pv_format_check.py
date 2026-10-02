@@ -1,8 +1,7 @@
 import logging
 import re
-from typing import List
 
-from pv_naming.split import section_split
+from dls_pv_naming.split import section_split
 
 NAMING_CONVENTION_REGEX = re.compile(
     r"""
@@ -16,8 +15,9 @@ NAMING_CONVENTION_REGEX = re.compile(
     # The first must be an upper case letter, the rest may be alphanumeric
     -
     [0-9]{2} # Two numbers required for identifier
-    (?::[a-zA-Z0-9_.-]+)*$ # Colon indicates start of subdevice name which may be made up
-    # of any number of groups comprising alphanumerics, full stops, dashes and underlines
+    (?::[a-zA-Z0-9_.-]+)*$ # Colon indicates start of subdevice name which may be made
+    # up of any number of groups comprising alphanumerics, full stops, dashes and
+    # underlines
     """,
     re.X,
 )
@@ -32,7 +32,8 @@ def pv_format_check(word: str) -> bool:
 
 
 def get_device_name(pv: str) -> str:
-    """Get the device name, allowing for cases where the pv is incorrect because of a missing colon"""
+    """Get the device name, allowing for cases where the pv is incorrect because of a
+    missing colon"""
 
     # Default assignment
     device = pv
@@ -60,7 +61,7 @@ def get_device_name(pv: str) -> str:
     return device
 
 
-def pv_format_report(pv: str) -> List[str]:
+def pv_format_report(pv: str) -> list[str]:
     """Produce a dictionary detailing errors with the pv format"""
     errors = []
 
@@ -72,8 +73,8 @@ def pv_format_report(pv: str) -> List[str]:
         len(section_split(pv)) > 4 and ":" not in pv and len(section_split(pv)[3]) > 2
     ) or (get_device_name(pv) != pv.split(":")[0]):
         # Don't add an unnecessary error here
-        # If the report has already added an error based on 2 colons, it doesn't need another
-        # one saying you are missing colons
+        # If the report has already added an error based on 2 colons, it doesn't need
+        # another one saying you are missing colons
         if len(errors) == 0:
             errors.append("Missing a colon after the device name")
         # Do still strip the name down though
@@ -93,10 +94,11 @@ def pv_format_report(pv: str) -> List[str]:
 
     # Check there are enough elements to test
     if (len(section_split(device)) != 4) or not all(
-        [element != "" for element in section_split(device)]
+        element != "" for element in section_split(device)
     ):
         errors.append(
-            "Device name must contain 4 elements separated by hyphens: Domain-TechnicalArea-Component-Identifier"
+            "Device name must contain 4 elements separated by hyphens: Domain-"
+            "TechnicalArea-Component-Identifier"
         )
     else:
         # Detailed inspection of device name elements
@@ -109,7 +111,8 @@ def pv_format_report(pv: str) -> List[str]:
         if len(domain) > 2:
             if not re.match("^[0-9][A-Z0-9][A-Z]$", domain[2:]):
                 errors.append(
-                    f"Subdomain in {domain} should be composed of a number, alphanumeric, and a letter"
+                    f"Subdomain in {domain} should be composed of a number, "
+                    "alphanumeric, and a letter"
                 )
 
         logging.debug(f"Tech Area: {technical_area}")
@@ -119,7 +122,8 @@ def pv_format_report(pv: str) -> List[str]:
         logging.debug(f"Component: {component}")
         if not re.match("^[A-Z][A-Z0-9]{0,4}$", component):
             errors.append(
-                f"Component of {component} must contain up to five alphanumeric characters, first character must be letter"
+                f"Component of {component} must contain up to five alphanumeric "
+                "characters, first character must be letter"
             )
 
         logging.debug(f"Identifier: {identifier}")

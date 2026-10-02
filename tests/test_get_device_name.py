@@ -1,6 +1,7 @@
-"""Test that get device name is working as imagined for a wide number of device scenarios"""
+"""Test that get device name is working as imagined for a wide number of device
+scenarios"""
 
-from pv_naming.pv_format_check import get_device_name
+from dls_pv_naming.pv_format_check import get_device_name
 
 
 def test_check_returns():

@@ -1,15 +1,17 @@
 import copy
 import logging
 import re
-from typing import List
 
-from pv_naming.fetch_from_rdb import fetch_all_information
-from pv_naming.pv_database_check import (
+from dls_pv_naming.pv_database_check import (
     empty_database,
     pv_database_check,
     pv_database_report,
 )
-from pv_naming.pv_format_check import get_device_name, pv_format_check, pv_format_report
+from dls_pv_naming.pv_format_check import (
+    get_device_name,
+    pv_format_check,
+    pv_format_report,
+)
 
 """Regex for getting what is in between speech marks following the record
 keyword at the start of a line
@@ -27,8 +29,9 @@ def record_text_report(
     record_text: str, database_info: dict = empty_database, format_only: bool = False
 ) -> dict:
     """
-    Analyse a .db records file to find the records, extract a list of unique device names and then
-    check them against the specified Diamond format and the database to produce a useful report.
+    Analyse a .db records file to find the records, extract a list of unique device
+    names and then check them against the specified Diamond format and the database
+    to produce a useful report.
 
     Ouptut expected to look like this for an example *bad_device_name*:
 
@@ -46,8 +49,10 @@ def record_text_report(
         }
     }
 
-    :param record_text: String of file to analyse (will be analysed directly, not read from this address)
-    :param database_info: Dictionary containing database information to use when analysing
+    :param record_text: String of file to analyse (will be analysed directly, not read
+        from this address)
+    :param database_info: Dictionary containing database information to use when
+        analysing
     """
     record_pvs = get_record_pvs(record_text)
     logging.debug(f"Found {len(record_pvs)} pvs")
@@ -55,7 +60,8 @@ def record_text_report(
     unique_record_pvs = set(record_pvs)
     logging.debug(f"Found {len(unique_record_pvs)} unique pvs")
 
-    # Collect a dictionary of device occurrences which splits on a colon to separate device names
+    # Collect a dictionary of device occurrences which splits on a colon to separate
+    # device names
     device_occurences: dict = {}
     for pv in unique_record_pvs:
         device_name = pv.split(":")[0] if "::" not in pv else pv
@@ -138,23 +144,25 @@ def record_text_report(
     return output_report
 
 
-def get_record_pvs(record_text: str) -> List[str]:
-    """Read record_file and return a list of all PVS which match a more general PV format"""
-    return [pv for pv in re.findall(RECORD_REGEX, record_text, flags=re.MULTILINE)]
+def get_record_pvs(record_text: str) -> list[str]:
+    """Read record_file and return a list of all PVS which match a more general PV
+    format"""
+    return list(re.findall(RECORD_REGEX, record_text, flags=re.MULTILINE))
 
 
 def record_file_report(
     filename: str, database_info: dict, format_only: bool = False
 ) -> dict:
-    """Read the contents of the file, fetch the information from the database and return a report"""
-    with open(filename, "r") as fp:
+    """Read the contents of the file, fetch the information from the database and return
+    a report"""
+    with open(filename) as fp:
         file_text = fp.read()
 
     return record_text_report(file_text, database_info, format_only)
 
 
 def record_file_report_many(
-    filename_list: List[str],
+    filename_list: list[str],
     database_info: dict,
     verbose: bool = False,
     format_only: bool = False,

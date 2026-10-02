@@ -5,6 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "dls-pv-name-check",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/dls_pv_naming/command_line/checker.py",
+            "console": "integratedTerminal",
+            "args": "${command:pickArgs}"
+        },
+        {
             "name": "Debug Unit Test",
             "type": "debugpy",
             "request": "launch",

@@ -1,21 +1,20 @@
-"""Big analysis scripts which can be expected to run for a reasonably long time.
-"""
+"""Big analysis scripts which can be expected to run for a reasonably long time."""
 
 import json
 import logging
 from pathlib import Path
-from typing import List
 
-from pv_naming.analyse_file import record_file_report_many
-from pv_naming.fetch_from_rdb import fetch_all_information
-from pv_naming.find_files import (
+from dls_pv_naming.analyse_file import record_file_report_many
+from dls_pv_naming.fetch_from_rdb import fetch_all_information
+from dls_pv_naming.find_files import (
     find_builder_ioc_filenames,
     find_latest_ioc_db_filenames,
 )
 
 
 def report_latest_ioc_dbs():
-    """Produce a report for all of the latest IOC files and save it in scratch as a JSON file"""
+    """Produce a report for all of the latest IOC files and save it in scratch as a
+    JSON file"""
     database_info = fetch_all_information()
     latest_ioc_dbs = find_latest_ioc_db_filenames()
 
@@ -34,10 +33,11 @@ def report_builder_iocs(
     database_info = fetch_all_information()
     try:
         builder_ioc_dbs = find_builder_ioc_filenames(builder_directory)
-    except FileNotFoundError:
+    except FileNotFoundError as e:
         raise ValueError(
-            f'Please provide the path to a valid builder directory - got "{builder_directory}"'
-        )
+            f"Please provide the path to a valid builder directory - "
+            f'got "{builder_directory}"'
+        ) from e
 
     reports = record_file_report_many(
         builder_ioc_dbs, database_info, verbose, format_only
@@ -46,12 +46,14 @@ def report_builder_iocs(
     return reports
 
 
-def report_dbs(filenames: List[str], verbose: bool, format_only: bool = False) -> dict:
+def report_dbs(filenames: list[str], verbose: bool, format_only: bool = False) -> dict:
     for f in filenames:
         try:
             assert Path(f).is_file()
-        except AssertionError:
-            raise ValueError(f'Please provide the path to a valid .db file - got "{f}"')
+        except AssertionError as e:
+            raise ValueError(
+                f'Please provide the path to a valid .db file - got "{f}"'
+            ) from e
 
     database_info = fetch_all_information()
 

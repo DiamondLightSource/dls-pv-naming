@@ -1,13 +1,13 @@
 import glob
 import logging
 from pathlib import Path
-from typing import List
 
 from natsort import natsorted  # type: ignore
 
 
-def find_latest_ioc_db_filenames() -> List[str]:
-    """Get the latest *expanded.db files from iocs and build up a counter from them for unique PV elements"""
+def find_latest_ioc_db_filenames() -> list[str]:
+    """Get the latest *expanded.db files from iocs and build up a counter from them for
+    unique PV elements"""
     # Builder directories
     top_level_dirs = [
         dir for dir in Path("/dls_sw/prod/R3.14.12.3/ioc").iterdir() if dir.is_dir()
@@ -23,9 +23,9 @@ def find_latest_ioc_db_filenames() -> List[str]:
     logging.info(f"Found {len(ioc_dirs)} ioc directories")
 
     ioc_latest_version = [
-        natsorted([ioc_version for ioc_version in Path(directory).iterdir()])[-1]
+        natsorted(list(Path(directory).iterdir()))[-1]
         for directory in ioc_dirs
-        if [directory for directory in Path(directory).iterdir()]
+        if list(Path(directory).iterdir())
     ]
     expanded_dbs_list = [
         glob.glob(str(directory) + "/db/*.db") for directory in ioc_latest_version
@@ -41,11 +41,11 @@ def find_latest_ioc_db_filenames() -> List[str]:
     return expanded_db_files
 
 
-def find_builder_ioc_filenames(builder_directory: str) -> List[str]:
-    """Return a list of databases to search from every ioc in a builder, assuming this is called on the top level"""
-    ioc_dirs = [
-        directory for directory in Path(Path(builder_directory) / "iocs").iterdir()
-    ]
+def find_builder_ioc_filenames(builder_directory: str) -> list[str]:
+    """Return a list of databases to search from every ioc in a builder, assuming this
+    is called on the top level"""
+    ioc_dirs = list(Path(Path(builder_directory) / "iocs").iterdir())
+
     logging.info(f"Found {len(ioc_dirs)} ioc directories")
     expanded_dbs_list = [
         glob.glob(str(directory) + "/db/*.db") for directory in ioc_dirs
