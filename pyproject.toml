@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "dls-pv-naming"
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -13,7 +13,10 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
 ]
 description = "Tools to validate EPICS PV names according to DLS rules"
-dependencies = [] # Add project dependencies here, e.g. ["click", "numpy"]
+dependencies = [
+    "requests",
+    "natsort",
+] # Add project dependencies here, e.g. ["click", "numpy"]
 dynamic = ["version"]
 license.file = "LICENSE"
 readme = "README.md"
@@ -31,7 +34,9 @@ dev = [
 ]
 
 [project.scripts]
-dls-pv-naming = "dls_pv_naming.__main__:main"
+dls-pv-name-report = "dls_pv_naming.command_line.file_report:command_line_file_report"
+dls-pv-name-check = "dls_pv_naming.command_line.checker:command_line_check"
+dls-pv-name-search = "dls_pv_naming.command_line.json_search:cli_json_search"
 
 [project.urls]
 GitHub = "https://github.com/DiamondLightSource/dls-pv-naming"
@@ -44,8 +49,8 @@ name = "Alexander Wells"
 version_file = "src/dls_pv_naming/_version.py"
 
 [tool.pyright]
-typeCheckingMode = "strict"
-reportMissingImports = false # Ignore missing stubs in imported modules
+typeCheckingMode = "standard"
+reportMissingImports = false  # Ignore missing stubs in imported modules
 
 [tool.pytest.ini_options]
 # Run pytest with all our checkers, and don't spam us with massive tracebacks on error

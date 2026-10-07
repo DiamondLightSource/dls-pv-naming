@@ -1,4 +1,4 @@
-from pv_naming.pv_database_check import pv_database_check
+from dls_pv_naming.pv_database_check import pv_database_check
 
 # Mock out database
 mock_database = {

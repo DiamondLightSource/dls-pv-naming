@@ -1,6 +1,4 @@
-import glob
-
-from pv_naming.find_files import find_builder_ioc_filenames
+from dls_pv_naming.find_files import find_builder_ioc_filenames
 
 
 def test_finds_db_file_where_there_is_only_one(tmpdir):

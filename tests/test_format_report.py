@@ -1,6 +1,6 @@
 """Test the output for format reports"""
 
-from pv_naming.pv_format_check import pv_format_report
+from dls_pv_naming.pv_format_check import pv_format_report
 
 
 def test_valid_pv_returns_empty():
@@ -28,7 +28,8 @@ def test_too_many_elements():
 
 def test_not_enough_elements():
     assert pv_format_report("BL16I-EA-IOC") == [
-        "Device name must contain 4 elements separated by hyphens: Domain-TechnicalArea-Component-Identifier"
+        "Device name must contain 4 elements separated by hyphens: Domain-TechnicalArea"
+        "-Component-Identifier"
     ]
 
 
@@ -64,7 +65,8 @@ def test_technical_area_must_have_two_capital_letters():
 
 def test_component_has_up_to_five_alphanumerics():
     assert pv_format_report("BL16I-EA-TOOLONG-01") == [
-        "Component of TOOLONG must contain up to five alphanumeric characters, first character must be letter"
+        "Component of TOOLONG must contain up to five alphanumeric characters, first "
+        "character must be letter"
     ]
 
 
@@ -74,7 +76,7 @@ def test_identifier_has_only_two_numbers():
     ]
 
 
-def test_indentifier_has_letter_O_instead_of_zero():
+def test_indentifier_has_letter_O_instead_of_zero():  # noqa: N802 Need a capital letter in name
     assert "Found capital letter O in identifier, expected number zero" in set(
         pv_format_report("BL16I-EA-IOC-O1")
     )

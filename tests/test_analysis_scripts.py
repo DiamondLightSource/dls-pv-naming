@@ -1,12 +1,12 @@
 from pathlib import Path
+from unittest.mock import patch
 
-from mock import patch
 from pytest import raises
 
-from pv_naming.analysis_scripts import report_dbs
+from dls_pv_naming.analysis_scripts import report_dbs
 
 
-@patch("pv_naming.analysis_scripts.fetch_all_information")
+@patch("dls_pv_naming.analysis_scripts.fetch_all_information")
 class TestReportDbs:
     def test_fetch_all_information_is_called_once(self, mock_fetch_all, tmpdir):
         mock_db = tmpdir / "mydb.db"
@@ -25,7 +25,7 @@ class TestReportDbs:
         with patch.object(Path, "is_file") as mock_is_file:
             mock_is_file.return_value = True
             with patch(
-                "pv_naming.analysis_scripts.record_file_report_many"
+                "dls_pv_naming.analysis_scripts.record_file_report_many"
             ) as mock_record_file_report_many:
                 report_dbs([mock_db1, mock_db2], verbose=False)
                 mock_record_file_report_many.assert_called_once_with(

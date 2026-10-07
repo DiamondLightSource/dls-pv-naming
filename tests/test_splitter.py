@@ -1,5 +1,6 @@
-from pv_naming.split import split_into_elements
 from pytest import raises
+
+from dls_pv_naming.split import split_into_elements
 
 
 def test_response():

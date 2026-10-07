@@ -1,9 +1,8 @@
-from mock import patch
+from unittest.mock import patch
 
-from pv_naming.analyse_file import (
+from dls_pv_naming.analyse_file import (
     get_record_pvs,
     record_file_report,
-    record_text_report,
 )
 
 
@@ -38,9 +37,8 @@ def test_gets_device_name_from_record_declaration():
 
 
 def test_gets_device_name_when_surrounded_by_other_text():
-    assert (
-        get_record_pvs(
-            """
+    assert get_record_pvs(
+        """
 #% macro, __doc__, Create some records for reading IOC statistics and details.
 #% macro, IOC, Device prefix
 
@@ -67,21 +65,20 @@ record(stringin, "BL16I-EA-IOC-04:STARTTOD")
     field(INP, "@%Y-%m-%d %H:%M:%S")
 }
     """
-        )
-        == ["BL16I-EA-IOC-04:ACCESS", "BL16I-EA-IOC-04:STARTTOD"]
-    )
+    ) == ["BL16I-EA-IOC-04:ACCESS", "BL16I-EA-IOC-04:STARTTOD"]
 
 
 def test_ignores_pv_names_in_gui_tags():
     assert (
         get_record_pvs(
-            "# % gui, i16Andor1.cam, enum, Shutter mode,   BL16I-EA-ANDOR-01:CAM:ShutterMode"
+            "# % gui, i16Andor1.cam, enum, Shutter mode,   BL16I-EA-ANDOR-01:CAM:"
+            "ShutterMode"
         )
         == []
     )
 
 
-@patch("pv_naming.analyse_file.record_text_report")
+@patch("dls_pv_naming.analyse_file.record_text_report")
 def test_record_file_report_calls_record_text_report_with_text_from_file(
     mocked_text_report, tmp_path
 ):

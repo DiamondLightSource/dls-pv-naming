@@ -1,9 +1,7 @@
 import logging
 import re
-from typing import List, Optional
 
-from pv_naming.fetch_from_rdb import fetch_all_information
-from pv_naming.split import section_split, split_into_elements
+from dls_pv_naming.split import split_into_elements
 
 # Empty version of database expected by pv_database_check
 empty_database: dict = {
@@ -69,7 +67,7 @@ def pv_database_check(pv: str, database_info: dict = empty_database) -> bool:
     return True
 
 
-def pv_database_report(pv: str, database_info: dict = empty_database) -> List[str]:
+def pv_database_report(pv: str, database_info: dict = empty_database) -> list[str]:
     """
     Return found issues
     :param:
@@ -77,22 +75,23 @@ def pv_database_report(pv: str, database_info: dict = empty_database) -> List[st
     errors = []
 
     try:
-        [domainGroup, technical_area, component, identifier] = re.split(
+        [domain_group, technical_area, component, identifier] = re.split(
             "[-_]", pv.split(":")[0]
         )
     except ValueError:
         logging.error("Not enough values to unpack")
         errors.append(
-            "Device name must contain 4 elements separated by hyphens: Domain-TechnicalArea-Component-Identifier"
+            "Device name must contain 4 elements separated by hyphens: Domain-"
+            "TechnicalArea-Component-Identifier"
         )
         return errors
 
     # Split domain and subdomain
-    if len(domainGroup) > 2:
-        domain = domainGroup[:2]
-        subdomain: Optional[str] = domainGroup[2:]
+    if len(domain_group) > 2:
+        domain = domain_group[:2]
+        subdomain: str | None = domain_group[2:]
     else:
-        domain = domainGroup
+        domain = domain_group
         subdomain = None
 
     ### Perform checks on elements

@@ -15,5 +15,5 @@ github_org: DiamondLightSource
 package_name: dls_pv_naming
 pypi: true
 repo_name: dls-pv-naming
-strict_typing: true
+strict_typing: false
 type_checker: pyright

@@ -3,15 +3,13 @@ Fetch information from the database
 """
 
 import logging
-import time
-from typing import List, Optional
 
 import requests
 
-from pv_naming.rdb_domain import RDB_API_ADDRESS
+from dls_pv_naming.rdb_domain import RDB_API_ADDRESS
 
 
-def fetch_from_rdb(request_address: str, key: str, value: str) -> Optional[dict]:
+def fetch_from_rdb(request_address: str, key: str, value: str) -> dict | None:
     """Get dictionary of all results which have key and value attributes"""
     resp = requests.get(request_address)
     if resp.status_code != 200:
@@ -25,7 +23,7 @@ def fetch_from_rdb(request_address: str, key: str, value: str) -> Optional[dict]
         return None
 
 
-def fetch_value_rdb(request_address: str, key: str) -> Optional[dict]:
+def fetch_value_rdb(request_address: str, key: str) -> dict | None:
     """Get a specific value from the RDB"""
     resp = requests.get(request_address)
     if resp.status_code != 200:
@@ -43,7 +41,7 @@ def fetch_all_components_from_rdb(request_address: str, key: str, value: str) ->
     """Get all component information from the database"""
     logging.debug(f"Reading information from {request_address}")
     component_data: dict = {}
-    comps: Optional[dict] = {}
+    comps: dict | None = {}
     page_num = 1
     while (comps is not None) and (comps.keys() is not component_data.keys()):
         component_data.update(comps)
@@ -54,7 +52,7 @@ def fetch_all_components_from_rdb(request_address: str, key: str, value: str) ->
     return component_data
 
 
-def fetch_pairs(request_address: str, key: str, value: str) -> Optional[dict]:
+def fetch_pairs(request_address: str, key: str, value: str) -> dict | None:
     """
     Special function to extract lists of values which are paired together
     Prime example is getting lists of all subdomains which match a particular domain,
