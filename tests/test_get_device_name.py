@@ -47,3 +47,11 @@ def test_late_colon():
     assert get_device_name("BL16I-EA-IOC-01") == get_device_name(
         "BL16I-EA-IOC-01Missing:Colon"
     )
+
+
+def test_three_digit_identifier():
+    assert get_device_name("BL16I-EA-IOC-001") == "BL16I-EA-IOC-001"
+
+
+def test_three_digit_identifier_with_missing_colon():
+    assert get_device_name("BL16I-EA-IOC-001abcdef") == "BL16I-EA-IOC-001"
