@@ -3,21 +3,39 @@ import re
 
 from dls_pv_naming.split import section_split
 
+# Two upper case characters required for domain
+DOMAIN_REGEX = "[A-Z]{2}"
+
+# Possibly four characters required for subdomain
+# number, number, uppercase letter, uppercase letter in non-capturing group
+SUBDOMAIN_REGEX = "(?:[0-9][0-9][A-Z][A-Z]{0,1}){0,1}"
+
+# Two upper case letters required for technical area
+TECHNICAL_AREA_REGEX = "[A-Z]{2}"
+
+# Component can be made up of up to six characters
+# The first must be an upper case letter, the rest may be alphanumeric
+COMPONENT_REGEX = "[A-Z][A-Z0-9]{0,5}"
+
+# Two or three numbers required for identifier
+IDENTIFIER_REGEX = "[0-9]{2,3}"
+
+# Colon indicates start of subdevice name which may be made
+# up of any number of groups comprising alphanumerics, full stops, dashes and
+# underlines
+NAME_REGEX = "(?::[a-zA-Z0-9_.-]+)*"
+
 NAMING_CONVENTION_REGEX = re.compile(
-    r"""
-    [A-Z]{2} # Two upper case characters required for domain
-    (?:[0-9][0-9][A-Z][A-Z]{0,1}){0,1} # Possibly four characters required for subdomain
-    # number, number, uppercase letter, uppercase letter in non-capturing group
+    rf"""
+    {DOMAIN_REGEX}
+    {SUBDOMAIN_REGEX}
     -
-    [A-Z]{2} # Two upper case letters required for technical area
+    {TECHNICAL_AREA_REGEX}
     -
-    [A-Z][A-Z0-9]{0,5} # Component can be made up of up to six characters
-    # The first must be an upper case letter, the rest may be alphanumeric
+    {COMPONENT_REGEX}
     -
-    [0-9]{2,3} # Two or three numbers required for identifier
-    (?::[a-zA-Z0-9_.-]+)*$ # Colon indicates start of subdevice name which may be made
-    # up of any number of groups comprising alphanumerics, full stops, dashes and
-    # underlines
+    {IDENTIFIER_REGEX}
+    {NAME_REGEX}$
     """,
     re.X,
 )
@@ -51,7 +69,13 @@ def get_device_name(pv: str) -> str:
         elements = section_split(device)
         # Just the identifier
         initial_element = elements[3]
-        shortened_element = elements[3][:2]
+
+        # Identify whether this is a 2 or 3 digit identifier
+        if re.match("[0-9]{3}", initial_element):
+            shortened_element = initial_element[:3]
+        else:
+            shortened_element = initial_element[:2]
+
         potential_device = re.sub(
             f"(?<=[-_]){initial_element}(.*)", shortened_element, device
         )
@@ -104,32 +128,34 @@ def pv_format_report(pv: str) -> list[str]:
         # Detailed inspection of device name elements
         [domain, technical_area, component, identifier] = section_split(device)
         logging.debug(f"Domain: {domain}")
-        if not re.match("^[A-Z]{2}", domain):
+        if not re.match(f"^{DOMAIN_REGEX}", domain):
             errors.append(
                 f"Domain in {domain} should be composed of two capital letters"
             )
         if len(domain) > 2:
-            if not re.match("^[0-9][A-Z0-9][A-Z]$", domain[2:]):
+            if not re.match(f"^{SUBDOMAIN_REGEX}$", domain[2:]):
                 errors.append(
                     f"Subdomain in {domain} should be composed of a number, "
                     "alphanumeric, and a letter"
                 )
 
         logging.debug(f"Tech Area: {technical_area}")
-        if not re.match("^[A-Z]{2}$", technical_area):
+        if not re.match(f"^{TECHNICAL_AREA_REGEX}$", technical_area):
             errors.append(f"Technical Area of {technical_area} must contain 2 letters")
 
         logging.debug(f"Component: {component}")
-        if not re.match("^[A-Z][A-Z0-9]{0,4}$", component):
+        if not re.match(f"^{COMPONENT_REGEX}$", component):
             errors.append(
-                f"Component of {component} must contain up to five alphanumeric "
-                "characters, first character must be letter"
+                f"Component of {component} must contain up to six alphanumeric "
+                "characters, first character must be alphabetic"
             )
 
         logging.debug(f"Identifier: {identifier}")
         # Make an exception for extra colons which will have been reported further up
-        if not re.match("^[0-9]{2}$", identifier.split(":")[0]):
-            errors.append(f"Identifier of {identifier} must contain only 2 numbers")
+        if not re.match(f"^{IDENTIFIER_REGEX}$", identifier.split(":")[0]):
+            errors.append(
+                f"Identifier of {identifier} must contain only 2 or 3 numbers"
+            )
             if "O" in identifier:
                 errors.append(
                     "Found capital letter O in identifier, expected number zero"
