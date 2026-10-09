@@ -14,7 +14,7 @@ NAMING_CONVENTION_REGEX = re.compile(
     [A-Z][A-Z0-9]{0,5} # Component can be made up of up to six characters
     # The first must be an upper case letter, the rest may be alphanumeric
     -
-    [0-9]{2} # Two numbers required for identifier
+    [0-9]{2,3} # Two or three numbers required for identifier
     (?::[a-zA-Z0-9_.-]+)*$ # Colon indicates start of subdevice name which may be made
     # up of any number of groups comprising alphanumerics, full stops, dashes and
     # underlines
