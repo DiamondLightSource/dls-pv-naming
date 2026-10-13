@@ -1,6 +1,7 @@
 import logging
 import re
 
+from dls_pv_naming.pv_format_check import IDENTIFIER_REGEX
 from dls_pv_naming.split import split_into_elements
 
 # Empty version of database expected by pv_database_check
@@ -60,7 +61,7 @@ def pv_database_check(pv: str, database_info: dict = empty_database) -> bool:
 
     # Check identifier is just two numbers
     # Should be caught by a format check but included here for completeness
-    if not re.match("^[0-9]{2}$", identifier):
+    if not re.match(f"^{IDENTIFIER_REGEX}$", identifier):
         return False
 
     # If all of these tests passed, return True
@@ -124,7 +125,7 @@ def pv_database_report(pv: str, database_info: dict = empty_database) -> list[st
 
     # Check identifier is just two numbers
     # Should be caught by a format check but included here for completeness
-    if not re.match("^[0-9]{2}$", identifier):
+    if not re.match(f"^{IDENTIFIER_REGEX}$", identifier):
         errors.append(f"Identifier of {identifier} must contain only 2 numbers")
         if "O" in identifier:
             errors.append("Found capital letter O in identifier, expected number zero")

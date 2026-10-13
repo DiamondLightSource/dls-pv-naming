@@ -64,8 +64,12 @@ record(stringin, "BL16I-EA-IOC-04:STARTTOD")
     field(PINI, "YES")
     field(INP, "@%Y-%m-%d %H:%M:%S")
 }
+# An example of a D-II format PV name
+record(ao, "SR01MS-MA-QUAD-10:I")
+{
+}
     """
-    ) == ["BL16I-EA-IOC-04:ACCESS", "BL16I-EA-IOC-04:STARTTOD"]
+    ) == ["BL16I-EA-IOC-04:ACCESS", "BL16I-EA-IOC-04:STARTTOD", "SR01MS-MA-QUAD-10:I"]
 
 
 def test_ignores_pv_names_in_gui_tags():

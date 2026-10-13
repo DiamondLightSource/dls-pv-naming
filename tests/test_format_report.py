@@ -63,20 +63,42 @@ def test_technical_area_must_have_two_capital_letters():
     ]
 
 
-def test_component_has_up_to_five_alphanumerics():
+def test_component_has_up_to_six_alphanumerics():
     assert pv_format_report("BL16I-EA-TOOLONG-01") == [
-        "Component of TOOLONG must contain up to five alphanumeric characters, first "
-        "character must be letter"
+        "Component of TOOLONG must contain up to six alphanumeric characters, first "
+        "character must be alphabetic"
     ]
 
 
 def test_identifier_has_only_two_numbers():
     assert pv_format_report("BL16I-EA-IOC-0L") == [
-        "Identifier of 0L must contain only 2 numbers"
+        "Identifier of 0L must contain only 2 or 3 numbers"
     ]
 
 
 def test_indentifier_has_letter_O_instead_of_zero():  # noqa: N802 Need a capital letter in name
     assert "Found capital letter O in identifier, expected number zero" in set(
         pv_format_report("BL16I-EA-IOC-O1")
+    )
+
+
+def test_subdomain_four_characters():
+    assert pv_format_report("SR01MS-MA-SQUAD-10") == []
+
+
+def test_identifier_three_numbers():
+    assert pv_format_report("SR01A-PC-SQUAD-101") == []
+
+
+def test_identifier_four_numbers_rejected():
+    assert pv_format_report("SR01A-PC-SQUAD-1234") == [
+        "Missing a colon after the device name"
+    ]
+
+
+def test_longest_d_ii_name():
+    # 60 character record name
+    assert (
+        pv_format_report("SR01ML-PC-ABCDEF-101:SOME:VERY:VERY:VERY:LONG:RECORD:NAME123")
+        == []
     )

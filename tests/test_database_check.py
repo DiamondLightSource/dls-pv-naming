@@ -3,7 +3,11 @@ from dls_pv_naming.pv_database_check import pv_database_check
 # Mock out database
 mock_database = {
     "domain": {"BL": "Beamline", "AA": "Test Domain"},
-    "subdomain": {"00I": "Mocked Beamline", "99B": "Test Subdomain"},
+    "subdomain": {
+        "00I": "Mocked Beamline",
+        "99B": "Test Subdomain",
+        "99ML": "Test Mid to Long",
+    },
     "domain_pair": {"BL": ["00I"]},
     "subdomain_pair": {"00I": ["BL"]},
     "technical_area": {"PY": "Python"},
@@ -56,3 +60,11 @@ def test_invalid_identifier():
 
 def test_not_enough_values_fails():
     assert pv_database_check("AA", mock_database) is False
+
+
+def test_three_digit_identifier():
+    assert pv_database_check("BL99B-PY-TEST-001", mock_database) is False
+
+
+def test_dii_subdomain():
+    assert pv_database_check("AA99ML-PY-TEST-01", mock_database) is False
