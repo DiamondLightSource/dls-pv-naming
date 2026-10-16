@@ -2,8 +2,7 @@
 
 from argparse import ArgumentParser
 
-from dls_pv_naming.fetch_from_rdb import fetch_from_rdb
-from dls_pv_naming.rdb_domain import RDB_API_ADDRESS
+from dls_pv_naming.fetch_data import RdbUrl, fetch_data
 
 # Constants to dictate which section to search
 DOMAIN = 0
@@ -18,22 +17,22 @@ def json_search_by_name(search_term: str, section: int) -> str:
     """
 
     if section == DOMAIN:
-        results = fetch_from_rdb(
-            f"{RDB_API_ADDRESS}/cs_epigetdomain.php?domainname={search_term}",
+        results = fetch_data(
+            f"{RdbUrl.DOMAIN}?domainname={search_term}",
             "domainid",
             "domainname",
         )
         tag = "domains"
     elif section == TECHNICAL_AREA:
-        results = fetch_from_rdb(
-            f"{RDB_API_ADDRESS}/cs_epigettecharea.php?techareaname={search_term}",
+        results = fetch_data(
+            f"{RdbUrl.TECH_AREA}?techareaname={search_term}",
             "techareaid",
             "techareaname",
         )
         tag = "technical areas"
     elif section == COMPONENT:
-        results = fetch_from_rdb(
-            f"{RDB_API_ADDRESS}/cs_epigetcomponent.php?componentname={search_term}",
+        results = fetch_data(
+            f"{RdbUrl.COMPONENT}?componentname={search_term}",
             "componentid",
             "componentname",
         )
@@ -99,3 +98,7 @@ def cli_json_search():
     else:
         # Use component as default
         print(json_search_by_name(args.search_term, COMPONENT))
+
+
+if __name__ == "__main__":
+    cli_json_search()
