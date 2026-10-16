@@ -53,7 +53,7 @@ def test_domain_must_have_two_capital_letters():
 
 def test_subdomain_must_have_number_alphanumeric_letter():
     assert pv_format_report("BL16-EA-IOC-01") == [
-        "Subdomain in BL16 should be composed of a number, alphanumeric, and a letter"
+        "Subdomain in BL16 should be composed of a number, number, letter, and a letter"
     ]
 
 

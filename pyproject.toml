@@ -28,6 +28,7 @@ dev = [
     "pyright",
     "pytest",
     "pytest-cov",
+    "pytest_httpserver",
     "ruff",
     "tox-uv",
     "types-mock",

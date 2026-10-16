@@ -2,7 +2,6 @@
 #
 # /// script
 # dependencies = [
-#   "requests",
 #   "dls_pv_naming",
 # ]
 # [tool.uv.sources]
@@ -14,24 +13,14 @@
 import json
 import os
 
-import requests
-
-from dls_pv_naming.fetch_from_rdb import RDB_API_ADDRESS
-
-apis = [
-    ("/cs_epigetdomain.php", "domains.json"),
-    ("/cs_epigetsubdomain.php", "subdomains.json"),
-    ("/cs_epigettecharea.php", "techarea.json"),
-    ("/cs_epigetcomponent.php", "component.json"),
-]
+from dls_pv_naming.fetch_from_rdb import URL_CACHE_MAP, fetch_from_rdb
 
 SCRIPT_DIR = os.path.dirname(__file__) + "/"
 
 
-for api, file in apis:
-    data = requests.get(f"{RDB_API_ADDRESS}{api}")
-    data.raise_for_status()
+for api, file in URL_CACHE_MAP.items():
+    data = fetch_from_rdb(api)
 
     with open(SCRIPT_DIR + file, mode="w") as f:
-        json.dump(data.json(), f)
+        json.dump(data, f)
         f.write("\n")  # Ensures file is newline-terminated to make pre-commit happy
