@@ -13,7 +13,7 @@
 import json
 import os
 
-from dls_pv_naming.fetch_from_rdb import URL_CACHE_MAP, fetch_from_rdb
+from dls_pv_naming.fetch_data import URL_CACHE_MAP, fetch_from_rdb
 
 SCRIPT_DIR = os.path.dirname(__file__) + "/"
 

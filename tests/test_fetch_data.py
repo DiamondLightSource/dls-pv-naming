@@ -5,8 +5,8 @@ from unittest.mock import patch
 import pytest
 from pytest_httpserver.httpserver import HTTPServer
 
-import dls_pv_naming.fetch_from_rdb
-from dls_pv_naming.fetch_from_rdb import (
+import dls_pv_naming.fetch_data
+from dls_pv_naming.fetch_data import (
     URL_CACHE_MAP,
     RdbUrl,
     State,
@@ -50,23 +50,21 @@ def test_test_rdb_fails_when_bad_status_returned(httpserver: HTTPServer):
     httpserver.check()
 
 
-@patch("dls_pv_naming.fetch_from_rdb.STATE", State.RDB_AVAILABLE)
+@patch("dls_pv_naming.fetch_data.STATE", State.RDB_AVAILABLE)
 def test__fetch_data_rdb_connected(monkeypatch):
     """Test _fetch_data calls the RDB when it is marked as connected"""
     data = [{"abc": "def"}]
-    monkeypatch.setattr(dls_pv_naming.fetch_from_rdb, "fetch_from_rdb", lambda x: data)
+    monkeypatch.setattr(dls_pv_naming.fetch_data, "fetch_from_rdb", lambda x: data)
 
     # Arbitrary RdbUrl
     assert _fetch_data(RdbUrl.DOMAIN) == data
 
 
-@patch("dls_pv_naming.fetch_from_rdb.STATE", State.RDB_UNAVAILABLE)
+@patch("dls_pv_naming.fetch_data.STATE", State.RDB_UNAVAILABLE)
 def test__fetch_data_rdb_disconnected(monkeypatch):
     """Test _fetch_data uses the cache when the RDB is marked as disconnected"""
     data = [{"abc": "def"}]
-    monkeypatch.setattr(
-        dls_pv_naming.fetch_from_rdb, "fetch_from_cache", lambda x: data
-    )
+    monkeypatch.setattr(dls_pv_naming.fetch_data, "fetch_from_cache", lambda x: data)
 
     # Arbitrary RdbUrl
     assert _fetch_data(RdbUrl.DOMAIN) == data

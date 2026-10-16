@@ -2,7 +2,7 @@
 
 from argparse import ArgumentParser
 
-from dls_pv_naming.fetch_from_rdb import RdbUrl, fetch_data
+from dls_pv_naming.fetch_data import RdbUrl, fetch_data
 
 # Constants to dictate which section to search
 DOMAIN = 0
