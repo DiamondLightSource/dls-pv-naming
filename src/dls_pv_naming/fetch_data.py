@@ -41,11 +41,11 @@ def fetch_data(request_address: str, key: str, value: str) -> dict | None:
     """Get dictionary of all results which have key and value attributes"""
 
     data = _fetch_data(request_address)
-    if "Error" not in data:
-        first_key = list(data[0].keys())[0]
-        return {element[key]: element[value] for element in data[0][first_key]}
-    else:
+    if "Error" in data:
         return None
+
+    first_key = list(data[0].keys())[0]
+    return {element[key]: element[value] for element in data[0][first_key]}
 
 
 def _fetch_data(request_address: str):
@@ -159,11 +159,12 @@ def _read_cache_file(request_address: str):
 def fetch_value_rdb(request_address: str, key: str) -> dict | None:
     """Get a specific value from the RDB"""
     data = _fetch_data(request_address)
-    if "Error" not in data:
-        first_key = list(data[0].keys())[0]
-        return data[0][first_key][0][key]
-    else:
+
+    if "Error" in data:
         return None
+
+    first_key = list(data[0].keys())[0]
+    return data[0][first_key][0][key]
 
 
 def fetch_pairs(request_address: str, key: str, value: str) -> dict | None:
@@ -173,21 +174,22 @@ def fetch_pairs(request_address: str, key: str, value: str) -> dict | None:
     and the inverse, all of the domains which match a particular subdomain.
     """
     data = _fetch_data(request_address)
-    if "Error" not in data:
-        first_key = list(data[0].keys())[0]
-        # Generate list of matching values from key to value
-        # return {key: [value, value, value], ...}
-        pairs: dict = {}
-        for element in data[0][first_key]:
-            if element[key] not in pairs:
-                # Start a list
-                pairs[element[key]] = [element[value]]
-            else:
-                # Add to the list
-                pairs[element[key]].append(element[value])
-        return pairs
-    else:
+    if "Error" in data:
         return None
+
+    first_key = list(data[0].keys())[0]
+    # Generate list of matching values from key to value
+    # return {key: [value, value, value], ...}
+    pairs: dict = {}
+    for element in data[0][first_key]:
+        if element[key] not in pairs:
+            # Start a list
+            pairs[element[key]] = [element[value]]
+        else:
+            # Add to the list
+            pairs[element[key]].append(element[value])
+
+    return pairs
 
 
 def fetch_all_information() -> dict:
