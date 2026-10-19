@@ -16,13 +16,6 @@ from dls_pv_naming.fetch_data import (
     fetch_pairs,
 )
 
-DOMAINID = "domainid"
-DOMAINNAME = "domainname"
-DATA_DOMAIN = [
-    {DOMAINID: "AA", DOMAINNAME: "Test AA"},
-    {DOMAINID: "BB", DOMAINNAME: "Test BB"},
-]
-
 
 def test_test_rdb_success(httpserver: HTTPServer):
     httpserver.expect_request("/", method="HEAD").respond_with_data("OK")
