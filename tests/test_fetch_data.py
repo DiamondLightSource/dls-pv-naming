@@ -1,4 +1,5 @@
 import json
+from argparse import ArgumentParser
 from importlib.resources import files
 from unittest.mock import patch
 
@@ -12,6 +13,7 @@ from dls_pv_naming.fetch_data import (
     State,
     _fetch_data,
     _test_rdb,
+    add_datasource_argument,
     fetch_from_snapshot,
     fetch_pairs,
 )
@@ -29,7 +31,7 @@ def test_test_rdb_fails_when_no_response():
     """Test that the method will mark the RDB as uncontactable when it cannot be
     reached"""
 
-    assert _test_rdb("http://localhost:999999") == State.RDB_UNAVAILABLE
+    assert _test_rdb("http://localhost:999999") == State.USE_SNAPSHOT
 
 
 def test_test_rdb_fails_when_bad_status_returned(httpserver: HTTPServer):
@@ -38,12 +40,12 @@ def test_test_rdb_fails_when_bad_status_returned(httpserver: HTTPServer):
 
     httpserver.expect_request("/", method="HEAD").respond_with_data("Error", status=404)
 
-    assert _test_rdb(httpserver.url_for("/")) == State.RDB_UNAVAILABLE
+    assert _test_rdb(httpserver.url_for("/")) == State.USE_SNAPSHOT
 
     httpserver.check()
 
 
-@patch("dls_pv_naming.fetch_data.STATE", State.RDB_AVAILABLE)
+@patch("dls_pv_naming.fetch_data.STATE", State.USE_RDB)
 def test__fetch_data_rdb_connected(monkeypatch):
     """Test _fetch_data calls the RDB when it is marked as connected"""
     data = [{"abc": "def"}]
@@ -53,7 +55,7 @@ def test__fetch_data_rdb_connected(monkeypatch):
     assert _fetch_data(RdbUrl.DOMAIN) == data
 
 
-@patch("dls_pv_naming.fetch_data.STATE", State.RDB_UNAVAILABLE)
+@patch("dls_pv_naming.fetch_data.STATE", State.USE_SNAPSHOT)
 def test__fetch_data_rdb_disconnected(monkeypatch):
     """Test _fetch_data uses the snapshot when the RDB is marked as disconnected"""
     data = [{"abc": "def"}]
@@ -276,3 +278,26 @@ def test_pairs_returns_expected_data():
     # fmt: on
 
     assert actual_data == expected_data
+
+
+@pytest.mark.parametrize(
+    "cmd_line, expected_value",
+    [
+        ([], State.INIT),
+        (["-r"], State.USE_RDB),
+        (["--rdb"], State.USE_RDB),
+        (["-s"], State.USE_SNAPSHOT),
+        (["--snapshot"], State.USE_SNAPSHOT),
+        (["-a"], State.INIT),
+        (["--attempt-rdb"], State.INIT),
+    ],
+)
+def test_add_datasource_argument_stores_expected_value(cmd_line, expected_value):
+    """Test that add_datasource_argument gives the expected STATE output for all
+    arguments"""
+    parser = ArgumentParser()
+    add_datasource_argument(parser)
+
+    args = parser.parse_args(cmd_line)
+
+    assert args.datasource == expected_value

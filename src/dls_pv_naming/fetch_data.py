@@ -4,6 +4,7 @@ Fetch information from the database or locally stored files
 
 import json
 import logging
+from argparse import ArgumentParser
 from enum import Enum, StrEnum, auto
 from importlib.resources import files
 from urllib.parse import urlsplit, urlunsplit
@@ -30,11 +31,18 @@ URL_SNAPSHOT_MAP = {
 
 class State(Enum):
     INIT = auto()
-    RDB_AVAILABLE = auto()
-    RDB_UNAVAILABLE = auto()
+    USE_RDB = auto()
+    USE_SNAPSHOT = auto()
 
 
 STATE = State.INIT
+
+
+def set_state(state: State) -> None:
+    """Set the state of the data fetching. This allows forcing use of the RDB or the
+    snapshot"""
+    global STATE
+    STATE = state
 
 
 def fetch_data(request_address: str, key: str, value: str) -> dict | None:
@@ -53,7 +61,7 @@ def _fetch_data(request_address: str):
     if STATE == State.INIT:
         STATE = _test_rdb(RDB_DOMAIN)
 
-    if STATE == State.RDB_AVAILABLE:
+    if STATE == State.USE_RDB:
         data = fetch_from_rdb(request_address)
     else:
         data = fetch_from_snapshot(request_address)
@@ -65,10 +73,10 @@ def _test_rdb(rdb_domain: str) -> State:
     try:
         resp = requests.head(rdb_domain)
         resp.raise_for_status()
-        state = State.RDB_AVAILABLE
+        state = State.USE_RDB
     except Exception:
         logging.error("Unable to connect to RDB. Falling back to local snapshot")
-        state = State.RDB_UNAVAILABLE
+        state = State.USE_SNAPSHOT
 
     return state
 
@@ -202,3 +210,38 @@ def fetch_all_information() -> dict:
         "technical_area": fetch_data(RdbUrl.TECH_AREA, "techareaid", "techareaname"),
         "component": fetch_data(RdbUrl.COMPONENT, "componentid", "componentname"),
     }
+
+
+def add_datasource_argument(argument_parser: ArgumentParser):
+    """Add the datasource mutually exclusive group to the given ArgumentParser.
+    Writes value into "datasource" attribute."""
+
+    arg_destination = "datasource"
+
+    exclusive_group = argument_parser.add_mutually_exclusive_group()
+    exclusive_group.set_defaults(**{arg_destination: State.INIT})
+    exclusive_group.add_argument(
+        "-r",
+        "--rdb",
+        action="store_const",
+        const=State.USE_RDB,
+        help="Retrieve data only from the Diamond RDB, ignoring local snapshot",
+        dest=arg_destination,
+    )
+    exclusive_group.add_argument(
+        "-s",
+        "--snapshot",
+        action="store_const",
+        const=State.USE_SNAPSHOT,
+        help="Retrieve data only from the local snapshot, ignoring the Diamond RDB",
+        dest=arg_destination,
+    )
+    exclusive_group.add_argument(
+        "-a",
+        "--attempt-rdb",
+        action="store_const",
+        const=State.INIT,
+        help="(default) Attempt to retrieve data from Diamond RDB, and fall back to "
+        "snapshot if uncontactable",
+        dest=arg_destination,
+    )

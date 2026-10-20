@@ -2,7 +2,12 @@
 
 from argparse import ArgumentParser
 
-from dls_pv_naming.fetch_data import RdbUrl, fetch_data
+from dls_pv_naming.fetch_data import (
+    RdbUrl,
+    add_datasource_argument,
+    fetch_data,
+    set_state,
+)
 
 # Constants to dictate which section to search
 DOMAIN = 0
@@ -87,7 +92,11 @@ def cli_json_search():
         help="search in technical areas only",
     )
 
+    add_datasource_argument(parser)
+
     args = parser.parse_args()
+
+    set_state(args.datasource)
 
     if args.component:
         print(json_search_by_name(args.search_term, COMPONENT))
