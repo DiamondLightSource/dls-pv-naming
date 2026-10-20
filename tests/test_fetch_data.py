@@ -7,12 +7,12 @@ from pytest_httpserver.httpserver import HTTPServer
 
 import dls_pv_naming.fetch_data
 from dls_pv_naming.fetch_data import (
-    URL_CACHE_MAP,
+    URL_SNAPSHOT_MAP,
     RdbUrl,
     State,
     _fetch_data,
     _test_rdb,
-    fetch_from_cache,
+    fetch_from_snapshot,
     fetch_pairs,
 )
 
@@ -55,9 +55,9 @@ def test__fetch_data_rdb_connected(monkeypatch):
 
 @patch("dls_pv_naming.fetch_data.STATE", State.RDB_UNAVAILABLE)
 def test__fetch_data_rdb_disconnected(monkeypatch):
-    """Test _fetch_data uses the cache when the RDB is marked as disconnected"""
+    """Test _fetch_data uses the snapshot when the RDB is marked as disconnected"""
     data = [{"abc": "def"}]
-    monkeypatch.setattr(dls_pv_naming.fetch_data, "fetch_from_cache", lambda x: data)
+    monkeypatch.setattr(dls_pv_naming.fetch_data, "fetch_from_snapshot", lambda x: data)
 
     # Arbitrary RdbUrl
     assert _fetch_data(RdbUrl.DOMAIN) == data
@@ -68,13 +68,13 @@ def idfn(val: str):
     return val.split("/")[-1]
 
 
-@pytest.mark.parametrize("rdb_url, filename", URL_CACHE_MAP.items(), ids=idfn)
-def test_fetch_from_cache_returns_file_data(rdb_url, filename):
+@pytest.mark.parametrize("rdb_url, filename", URL_SNAPSHOT_MAP.items(), ids=idfn)
+def test_fetch_from_snapshot_returns_file_data(rdb_url, filename):
     """Test that the function returns the data exactly as appears on disk"""
 
-    actual_data = fetch_from_cache(rdb_url)
+    actual_data = fetch_from_snapshot(rdb_url)
 
-    data_text = files("dls_pv_naming.data").joinpath(filename).read_text()
+    data_text = files("dls_pv_naming.snapshot").joinpath(filename).read_text()
     expected_data = json.loads(data_text)
 
     assert actual_data == expected_data
@@ -152,11 +152,11 @@ def test_fetch_from_cache_returns_file_data(rdb_url, filename):
         ),
     ],
 )
-def test_fetch_from_cache_using_id_query_string(rdb_url, query_str, expected_data):
-    """Test various query strings apply correct filtering to cached data when using a
+def test_fetch_from_snapshot_using_id_query_string(rdb_url, query_str, expected_data):
+    """Test various query strings apply correct filtering to snapshot data when using a
     'id' type of query string"""
 
-    actual_data = fetch_from_cache(rdb_url + f"?{query_str}")
+    actual_data = fetch_from_snapshot(rdb_url + f"?{query_str}")
 
     assert actual_data == expected_data
 
@@ -217,11 +217,11 @@ def test_fetch_from_cache_using_id_query_string(rdb_url, query_str, expected_dat
         ),
     ],
 )
-def test_fetch_from_cache_using_name_query_string(rdb_url, query_str, expected_data):
-    """Test various query strings apply correct filtering to cached data when using a
+def test_fetch_from_snapshot_using_name_query_string(rdb_url, query_str, expected_data):
+    """Test various query strings apply correct filtering to snapshot data when using a
     'name' type of query string"""
 
-    actual_data = fetch_from_cache(rdb_url + f"?{query_str}")
+    actual_data = fetch_from_snapshot(rdb_url + f"?{query_str}")
 
     assert actual_data == expected_data
 

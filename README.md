@@ -119,9 +119,9 @@ If you would like to get a more general feel for how consistent PV naming is in 
 
 This will produce a file at `/scratch/ioc_reports.json` which provides the output of databases found in the latest version of every ioc in `/dls_sw/prod/R3.14.12.3/ioc` and `/dls_sw/prod/R3.14.12.7/ioc`.
 
-# Update cached RDB data
+# Update snapshot RDB data
 
-This module caches the values from the Diamond RDB. These provide the valid EPICS names. The cached data can be updated by running the update script:
+This module takes a snapshot of the values from the Diamond RDB. These provide the valid EPICS names. The snapshot data can be updated by running the update script:
 
 `./src/dls_pv_naming/data/update_cached_data.py`
 

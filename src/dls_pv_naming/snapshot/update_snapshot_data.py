@@ -13,12 +13,12 @@
 import json
 import os
 
-from dls_pv_naming.fetch_data import URL_CACHE_MAP, fetch_from_rdb
+from dls_pv_naming.fetch_data import URL_SNAPSHOT_MAP, fetch_from_rdb
 
 SCRIPT_DIR = os.path.dirname(__file__) + "/"
 
 
-for api, file in URL_CACHE_MAP.items():
+for api, file in URL_SNAPSHOT_MAP.items():
     data = fetch_from_rdb(api)
 
     with open(SCRIPT_DIR + file, mode="w") as f:

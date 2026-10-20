@@ -1,5 +1,5 @@
 """
-Fetch information from the database or locally cached files
+Fetch information from the database or locally stored files
 """
 
 import json
@@ -20,7 +20,7 @@ class RdbUrl(StrEnum):
     COMPONENT = f"{RDB_API_ADDRESS}/cs_epigetcomponent.php"
 
 
-URL_CACHE_MAP = {
+URL_SNAPSHOT_MAP = {
     RdbUrl.DOMAIN: "domains.json",
     RdbUrl.SUBDOMAIN: "subdomains.json",
     RdbUrl.TECH_AREA: "techarea.json",
@@ -56,7 +56,7 @@ def _fetch_data(request_address: str):
     if STATE == State.RDB_AVAILABLE:
         data = fetch_from_rdb(request_address)
     else:
-        data = fetch_from_cache(request_address)
+        data = fetch_from_snapshot(request_address)
     return data
 
 
@@ -67,7 +67,7 @@ def _test_rdb(rdb_domain: str) -> State:
         resp.raise_for_status()
         state = State.RDB_AVAILABLE
     except Exception:
-        logging.error("Unable to connect to RDB. Falling back to local cache")
+        logging.error("Unable to connect to RDB. Falling back to local snapshot")
         state = State.RDB_UNAVAILABLE
 
     return state
@@ -85,14 +85,14 @@ def fetch_from_rdb(request_address: str):
     return resp.json()
 
 
-def fetch_from_cache(request_address: str):
-    """Read the cached files associated with the requested address, apply any query
+def fetch_from_snapshot(request_address: str):
+    """Read the snapshot files associated with the requested address, apply any query
     strings, and return it in the same format as the RDB"""
     url_split = urlsplit(request_address)
 
     queries = []
     if url_split.query:
-        # The cache contains the entire unfiltered dataset, so remove query param and
+        # The snapshot contains the entire unfiltered dataset, so remove query param and
         # re-apply then as a filter later
         request_address = RdbUrl(urlunsplit(url_split._replace(query="")))
 
@@ -102,7 +102,7 @@ def fetch_from_cache(request_address: str):
             query_key, query_value = query.split("=")
             queries.append((query_key, query_value))
 
-    data = _read_cache_file(request_address)
+    data = _read_snapshot_file(request_address)
 
     # The data is stored as a list with a single item: A dictionary with a single key,
     # whose values are then a list of dictionaries. e.g.:
@@ -145,14 +145,14 @@ def fetch_from_cache(request_address: str):
     return data
 
 
-def _read_cache_file(request_address: str):
-    """Read the cache file related to the requested address.
+def _read_snapshot_file(request_address: str):
+    """Read the snapshot file related to the requested address.
     Address must not have any query parameters or fragments."""
-    datafile = URL_CACHE_MAP[RdbUrl(request_address)]
-    with files("dls_pv_naming.data").joinpath(datafile).open() as f:
+    datafile = URL_SNAPSHOT_MAP[RdbUrl(request_address)]
+    with files("dls_pv_naming.snapshot").joinpath(datafile).open() as f:
         data = json.load(f)
 
-    assert len(data) == 1, f"Unexpected extra data read from cached file {datafile}"
+    assert len(data) == 1, f"Unexpected extra data read from snapshot file {datafile}"
     return data
 
 
