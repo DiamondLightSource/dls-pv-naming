@@ -99,7 +99,3 @@ def command_line_check():
 
     for line in result["comments"]:
         print(line)
-
-
-if __name__ == "__main__":
-    command_line_check()

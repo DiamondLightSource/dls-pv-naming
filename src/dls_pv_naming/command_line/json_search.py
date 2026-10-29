@@ -107,7 +107,3 @@ def cli_json_search():
     else:
         # Use component as default
         print(json_search_by_name(args.search_term, COMPONENT))
-
-
-if __name__ == "__main__":
-    cli_json_search()

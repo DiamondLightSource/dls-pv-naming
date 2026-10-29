@@ -8,7 +8,8 @@
             "name": "dls-pv-name-search",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/src/dls_pv_naming/command_line/json_search.py",
+            "justMyCode": false,
+            "program": ".venv/bin/dls-pv-name-search",
             "console": "integratedTerminal",
             "args": [
                 "power"
@@ -18,9 +19,12 @@
             "name": "dls-pv-name-check",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/src/dls_pv_naming/command_line/checker.py",
+            "justMyCode": false,
+            "program": ".venv/bin/dls-pv-name-check",
             "console": "integratedTerminal",
-            "args": "${command:pickArgs}"
+            "args": [
+                "SV-BM-IOC-01"
+            ]
         },
         {
             "name": "Debug Unit Test",
