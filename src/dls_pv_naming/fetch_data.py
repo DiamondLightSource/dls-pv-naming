@@ -35,14 +35,16 @@ class State(Enum):
     USE_SNAPSHOT = auto()
 
 
-STATE = State.INIT
+# Denotes where we will be retrieving data from, or whether we need to probe RDB
+# connectivity first.
+_state = State.INIT
 
 
 def set_state(state: State) -> None:
     """Set the state of the data fetching. This allows forcing use of the RDB or the
     snapshot"""
-    global STATE
-    STATE = state
+    global _state
+    _state = state
 
 
 def fetch_data(request_address: str, key: str, value: str) -> dict | None:
@@ -57,11 +59,11 @@ def fetch_data(request_address: str, key: str, value: str) -> dict | None:
 
 
 def _fetch_data(request_address: str):
-    global STATE
-    if STATE == State.INIT:
-        STATE = _test_rdb(RDB_DOMAIN)
+    global _state
+    if _state == State.INIT:
+        _state = _test_rdb(RDB_DOMAIN)
 
-    if STATE == State.USE_RDB:
+    if _state == State.USE_RDB:
         data = fetch_from_rdb(request_address)
     else:
         data = fetch_from_snapshot(request_address)

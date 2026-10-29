@@ -45,7 +45,7 @@ def test_test_rdb_fails_when_bad_status_returned(httpserver: HTTPServer):
     httpserver.check()
 
 
-@patch("dls_pv_naming.fetch_data.STATE", State.USE_RDB)
+@patch("dls_pv_naming.fetch_data._state", State.USE_RDB)
 def test__fetch_data_rdb_connected(monkeypatch):
     """Test _fetch_data calls the RDB when it is marked as connected"""
     data = [{"abc": "def"}]
@@ -55,7 +55,7 @@ def test__fetch_data_rdb_connected(monkeypatch):
     assert _fetch_data(RdbUrl.DOMAIN) == data
 
 
-@patch("dls_pv_naming.fetch_data.STATE", State.USE_SNAPSHOT)
+@patch("dls_pv_naming.fetch_data._state", State.USE_SNAPSHOT)
 def test__fetch_data_rdb_disconnected(monkeypatch):
     """Test _fetch_data uses the snapshot when the RDB is marked as disconnected"""
     data = [{"abc": "def"}]
@@ -293,7 +293,7 @@ def test_pairs_returns_expected_data():
     ],
 )
 def test_add_datasource_argument_stores_expected_value(cmd_line, expected_value):
-    """Test that add_datasource_argument gives the expected STATE output for all
+    """Test that add_datasource_argument gives the expected state output for all
     arguments"""
     parser = ArgumentParser()
     add_datasource_argument(parser)
