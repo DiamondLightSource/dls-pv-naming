@@ -1,7 +1,12 @@
 import argparse
 
 from dls_pv_naming import __version__
-from dls_pv_naming.fetch_from_rdb import fetch_all_information, fetch_value_rdb
+from dls_pv_naming.command_line.utils import add_datasource_argument
+from dls_pv_naming.fetch_data import (
+    fetch_all_information,
+    fetch_value_rdb,
+    set_state,
+)
 from dls_pv_naming.pv_database_check import pv_database_check, pv_database_report
 from dls_pv_naming.pv_format_check import pv_format_check, pv_format_report
 from dls_pv_naming.rdb_domain import RDB_API_ADDRESS
@@ -79,9 +84,13 @@ def command_line_check():
         version=__version__,
     )
 
+    add_datasource_argument(argument_parser)
+
     argument_parser.add_argument("device", help="the device to check")
 
     args = argument_parser.parse_args()
+
+    set_state(args.datasource)
 
     # Get the device
     device = args.device
@@ -90,7 +99,3 @@ def command_line_check():
 
     for line in result["comments"]:
         print(line)
-
-
-if __name__ == "__main__":
-    command_line_check()

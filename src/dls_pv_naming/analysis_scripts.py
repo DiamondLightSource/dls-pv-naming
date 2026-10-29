@@ -5,7 +5,7 @@ import logging
 from pathlib import Path
 
 from dls_pv_naming.analyse_file import record_file_report_many
-from dls_pv_naming.fetch_from_rdb import fetch_all_information
+from dls_pv_naming.fetch_data import fetch_all_information
 from dls_pv_naming.find_files import (
     find_builder_ioc_filenames,
     find_latest_ioc_db_filenames,
