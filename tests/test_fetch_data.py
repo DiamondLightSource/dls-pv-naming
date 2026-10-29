@@ -7,13 +7,13 @@ import pytest
 from pytest_httpserver.httpserver import HTTPServer
 
 import dls_pv_naming.fetch_data
+from dls_pv_naming.command_line.utils import add_datasource_argument
 from dls_pv_naming.fetch_data import (
     URL_SNAPSHOT_MAP,
     RdbUrl,
     State,
     _fetch_data,
     _test_rdb,
-    add_datasource_argument,
     fetch_from_snapshot,
     fetch_pairs,
 )

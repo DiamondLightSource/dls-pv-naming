@@ -1,8 +1,8 @@
 import argparse
 
 from dls_pv_naming import __version__
+from dls_pv_naming.command_line.utils import add_datasource_argument
 from dls_pv_naming.fetch_data import (
-    add_datasource_argument,
     fetch_all_information,
     fetch_value_rdb,
     set_state,

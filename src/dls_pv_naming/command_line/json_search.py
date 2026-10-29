@@ -2,9 +2,9 @@
 
 from argparse import ArgumentParser
 
+from dls_pv_naming.command_line.utils import add_datasource_argument
 from dls_pv_naming.fetch_data import (
     RdbUrl,
-    add_datasource_argument,
     fetch_data,
     set_state,
 )
