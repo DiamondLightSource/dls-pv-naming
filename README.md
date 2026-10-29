@@ -123,6 +123,6 @@ This will produce a file at `/scratch/ioc_reports.json` which provides the outpu
 
 This module takes a snapshot of the values from the Diamond RDB. These provide the valid EPICS names. The snapshot data can be updated by running the update script:
 
-`./src/dls_pv_naming/data/update_snapshot_data.py`
+`./src/dls_pv_naming/snapshot/update_snapshot_data.py`
 
 This will update all the JSON files in the `data` directory. Ensure all updated JSON files are then committed.
