@@ -136,7 +136,7 @@ def pv_format_report(pv: str) -> list[str]:
             if not re.match(f"^{SUBDOMAIN_REGEX}$", domain[2:]):
                 errors.append(
                     f"Subdomain in {domain} should be composed of a number, "
-                    "alphanumeric, and a letter"
+                    "number, letter, and a letter"
                 )
 
         logging.debug(f"Tech Area: {technical_area}")

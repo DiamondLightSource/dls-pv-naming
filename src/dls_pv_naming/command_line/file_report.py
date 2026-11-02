@@ -3,6 +3,8 @@ import json
 import logging
 
 from dls_pv_naming.analysis_scripts import report_builder_iocs, report_dbs
+from dls_pv_naming.command_line.utils import add_datasource_argument
+from dls_pv_naming.fetch_data import set_state
 
 
 def command_line_file_report():
@@ -54,7 +56,11 @@ dls-pv-name-report-report -b /file/to/builder/top""",
         "in the report",
     )
 
+    add_datasource_argument(argument_parser)
+
     args = argument_parser.parse_args()
+
+    set_state(args.datasource)
 
     if args.builder:
         report = report_builder_iocs(args.databases[0], args.verbose, args.format_only)
